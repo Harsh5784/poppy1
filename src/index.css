@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Outfit;
+  background-color: #192026;
+}
+
+#root{
+  min-height: 100vh;
+  display: flex;
+}
+
+.pattern {
+  height: 100vh;
+  background: 
+      radial-gradient(circle at 10% 50%, #000 20%, transparent 21%) 0 0,
+      radial-gradient(circle at 30% 50%, #000 30%, transparent 31%) 0 0,
+      radial-gradient(circle at 60% 50%, #000 40%, transparent 41%) 0 0,
+      radial-gradient(circle at 100% 50%, #000 50%, transparent 51%) 0 0;
+  background-size: 400px 400px;
+  background-repeat: repeat-x;
+
+}

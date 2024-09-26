@@ -1,0 +1,149 @@
+.sidebar{
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar img{
+    width: 20px;
+    
+}
+
+.sidebar .top{
+    background-color: #35404b;
+}
+
+.sidebar .menu{
+    display: flex;
+    flex-direction: row;
+    gap: 190px;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: #35404b;
+
+}
+
+.sidebar .menu img{
+    width: 30px;
+    background-color: #35404b;
+
+}
+
+.bottom img{
+    width: 30px;
+}
+
+.sidebar .new-chat{
+    margin-top: 35px;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 10px;
+    background-color: #28313a;
+    border-radius: 50px;
+    font-size: 14px;
+    color: 35404b;
+    cursor: pointer;
+}
+
+.sidebar .new-chat p{
+    background-color: #28313a;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-right: 20px;
+}
+
+.sidebar .new-chat img{
+    width: 20px;
+    justify-content: left;
+    background-color: #28313a;
+
+}
+
+
+
+.sidebar .recent{
+    display: flex;
+    flex-direction: column;
+    background-color: #35404b;
+    padding-bottom: 40px;
+    border-bottom: 3px outset #a7b0ba;
+}
+
+.sidebar .recent-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+    background-color: #35404b;
+
+}
+
+.sidebar .recent-entry {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    padding: 10px;
+    color: #fff;;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: px;
+    background-color: #35404b;
+}
+
+.sidebar .recent-entry img {
+    background-color: #35404b;
+}
+
+.sidebar .recent-entry p {
+    background-color: #35404b;
+}
+
+
+
+.sidebar .recent-entry:hover{
+    background-color: #35404b;
+}
+
+
+.sidebar .bottom{
+    display: flex;
+    flex-direction: column;
+    background-color: #35404b;
+
+    
+}
+
+.sidebar .bottom-item{
+    padding-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    padding: 10px;
+    padding-right: 40px;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+    background-color: #35404b;
+    
+}
+
+.sidebar .bottom-item img{
+    background-color: #35404b;
+}
+
+.sidebar .bottom-item p{
+    background-color: #35404b;
+}
+
+.sidebar .bottom-item:hover{
+    background-color: #35404b;
+}
+
