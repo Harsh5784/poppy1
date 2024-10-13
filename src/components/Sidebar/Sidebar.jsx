@@ -1,58 +1,71 @@
-import React, { useState } from 'react'
-import './Sidebar.css'
-import { assets } from '../../assets/assets'
+import React, { useState } from 'react';
+import './Sidebar.css';
+import { assets } from '../../assets/assets';
+import Linkbar from './Links_bar/linkbar'; // Ensure proper import of Linkbar
+import toggleIcon from '../../assets/right.png'; // Import your toggle image
 
-export const Sidebar = () => {
+export const Sidebar = ({ setIsSidebarVisible }) => {
+    const [isLinkbarVisible, setIsLinkbarVisible] = useState(false); // State for Linkbar visibility
 
-    const [extented, setExtented] = useState(false)
+    const handleCollapse = () => {
+        setIsSidebarVisible(false);
+    };
+
+    const toggleLinkbarVisibility = () => {
+        setIsLinkbarVisible(prev => !prev); // Toggle Linkbar visibility
+    };
 
     return (
-        <div className='sidebar'>
-            <div className='top'>
-                <div onClick={()=>setExtented(prev=>!prev)} className='menu'>
-                    <img src={assets.sidebar} alt="" />
-                    <img src={assets.right} alt="" /> 
-                </div>
-                <div className="new-chat">
-                    <img src={assets.plus} alt="" />
-                    <p>New Chat</p>
-                </div>
+        <div className='sidebar-container'>
+            <div className='sidebar'>
+                <div className='top'>
+                    <div onClick={handleCollapse} className='menu'>
+                        <img src={assets.sidebar} alt="Sidebar Icon" />
+                    </div>
 
-                
-                <div className="recent">
+                    {/* Toggle Linkbar Image */}
+                    <div className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
+                        <img 
+                            src={toggleIcon} 
+                            alt="Toggle Linkbar" 
+                            className="toggle-linkbar-icon"
+                        />
+                    </div>
+
+                    <div className="new-chat">
+                        <img src={assets.plus} alt="New Chat" />
+                        <p>New Chat</p>
+                    </div>
+
+                    <div className="recent">
                         <p className="recent-title">Recent</p>
                         <div className="recent-entry">
-                            <img src={assets.comment} alt="" />
-                            <p>What is My Ai ?</p>
+                            <img src={assets.comment} alt="Comment Icon" />
+                            <p>What is My AI?</p>
                         </div>
                         <div className="recent-entry">
-                            <img src={assets.comment} alt="" />
+                            <img src={assets.comment} alt="Comment Icon" />
                             <p>What is Android and..</p>
                         </div>
                         <div className="recent-entry">
-                            <img src={assets.comment} alt="" />
+                            <img src={assets.comment} alt="Comment Icon" />
                             <p>Deep Learning in..</p>
                         </div>
                     </div>
-                    
-
-            </div>
-            <div className="bottom">
-                <div className="bottom-item">
-                    <img src={assets.question_icon} alt="" />
-                     <p>Help</p> 
                 </div>
-                <div className="bottom-item">
-                    <img src={assets.setting_icon} alt="" />
-                    <p>Settings</p> 
+
+                <div className="bottom">
+                    <div className="bottom-item">
+                        <img src={assets.question_icon} alt="Help Icon" />
+                        <p>Help</p>
+                    </div>
+                    <div className="bottom-item">
+                        <img src={assets.setting_icon} alt="Settings Icon" />
+                        <p>Settings</p>
+                    </div>
                 </div>
-                
-                
             </div>
-
-
-
+            {isLinkbarVisible && <Linkbar />} {/* Conditionally render Linkbar */}
         </div>
-
-    )
-}
+    );
+};

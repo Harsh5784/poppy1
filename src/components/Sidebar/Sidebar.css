@@ -147,3 +147,39 @@
     background-color: #35404b;
 }
 
+.sidebar-container {
+    display: flex; /* Flexbox for parallel layout */
+}
+
+.sidebar {
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.input-fields {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.input-fields input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%; /* Full width */
+    background-color: #f9f9f9; /* Light background */
+}
+
+.input-fields input::placeholder {
+    color: #aaa; /* Placeholder color */
+}
+

@@ -1,0 +1,158 @@
+.simple-page {
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    width: 110%;
+    text-align: center;
+}
+
+.input-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 90%;
+    background-color: #35404b;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #35404b;
+    width: 100%;
+    max-width: 200px;
+    position: relative;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #28313a;
+    color: #fff;
+    z-index: 2;
+    border-radius: 5px;
+    padding: 5px;
+    height: 30px;
+    position: relative;
+    width: 90%;
+}
+
+.input-wrapper input {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: #fff;
+    font-size: 12px;
+    flex: 1;
+}
+
+.input-icon {
+    width: 100px; /* Adjust icon size */
+    height: 20px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: flex-end; /* Align to the right */
+    margin-top: 5px; /* Space below the input box */
+}
+.add-button {
+    display: none; /* Hide by default */
+    color: #fff; /* Text color */
+    font-size: 24px;
+    cursor: pointer;
+    background-color: transparent; /* No background */
+    border: none; /* Remove outline */
+    padding: 0; /* Remove any default padding */
+    opacity: 0.7; /* Slightly transparent */
+    transition: opacity 0.3s; /* Smooth transition for hover effect */
+}
+
+.add-button:hover {
+    opacity: 1; /* Fully visible on hover */
+}
+
+.remove-button {
+    color: #fff; /* Text color */
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 5px; /* Space below the button */
+    background: transparent; /* No background */
+    border: none; /* Remove outline */
+    display: none; /* Hide by default */
+    padding: 0; /* Remove any default padding */
+    opacity: 0.7; /* Slightly transparent */
+    transition: opacity 0.3s; /* Smooth transition for hover effect */
+}
+
+.input-wrapper:hover .remove-button {
+    display: block; /* Show on hover */
+}
+
+.input-wrapper:hover .remove-button:hover {
+    opacity: 1; /* Fully visible on hover */
+}
+
+
+.remove-button {
+    color: #fff; /* Text color */
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 5px; /* Space below the button */
+    background: transparent; /* No background */
+    border: none; /* Remove outline */
+    display: none; /* Hide by default */
+    padding: 0; /* Remove any default padding */
+}
+
+.input-container:hover .add-button {
+    display: inline-block; /* Show on hover */
+}
+
+.input-wrapper:hover .remove-button {
+    display: block; /* Show on hover */
+}
+
+.vertical-line {
+    border-left: 1px solid #fff;
+    position: absolute;
+    left: 30%; /* Positioning to the right of the input */
+    top: -20px; /* Adjust this to align below the input */
+    height: 25px;
+    margin-left: -10px; /* Space from the input */
+    z-index: 0; /* Ensure it's behind the input */
+    margin-top: 0; /* Remove margin to align properly */
+}
+
+.input-wrapper.sub-input {
+    margin-left: calc(15px * var(--input-index));
+}
+
+.summary-result {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.input-wr {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #35404b;
+    width: 100%;
+    max-width: 200px;
+    position: relative;
+}

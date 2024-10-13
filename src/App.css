@@ -1,0 +1,21 @@
+.show-sidebar-button {
+    position: fixed; /* Fix the position of the button */
+    top: 20px; /* Adjust as needed */
+    left: 20px; /* Adjust as needed */
+    padding: 10px 20px;
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure the button is on top */
+}
+
+.show-sidebar-button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+.menu_logo_slidebar img{
+    width: 30px;
+margin-bottom: -80px;
+}

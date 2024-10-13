@@ -1,6 +1,8 @@
 import React from 'react'
 import './Main.css'
 import { assets } from '../../assets/assets'
+import upArrow from '../../assets/up_arrow.png'; // Adjust the path as necessary
+
 
 export const Main = () => {
     return (
@@ -23,6 +25,7 @@ export const Main = () => {
                 <div className='box'>
                     <div className="greet">
                         <img className="logo" src={assets.logo} alt="" />
+                        
                         <div className="greet-text">
                             <p><span>Hello, User</span></p>
                             <p>How can I help you today?</p>
@@ -55,9 +58,7 @@ export const Main = () => {
                 <div className="main-bottom">
                     <div className='search-box'>
                         <input type="text" placeholder='Message' />
-                        <div>
-
-                            <img src={assets.up_arrow1} alt="" />
+                        <div><img src={upArrow} alt="Send" /> {/* Use the imported image here */}
                         </div>
                     </div>
                 </div>
