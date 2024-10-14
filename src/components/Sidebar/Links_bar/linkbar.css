@@ -117,6 +117,7 @@
     border: none; /* Remove outline */
     display: none; /* Hide by default */
     padding: 0; /* Remove any default padding */
+    background-color: #35404b;
 }
 
 .input-container:hover .add-button {

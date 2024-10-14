@@ -8,28 +8,24 @@ import fileIcon from '../../../assets/document.jpg';
 const SimplePage = () => {
     const [youtubeLinks, setYoutubeLinks] = useState(['']);
     const [websiteLinks, setWebsiteLinks] = useState(['']);
-    const [wikipediaTitles, setWikipediaTitles] = useState(['']);
     const [audioFiles, setAudioFiles] = useState([null]);
     const [documentFiles, setDocumentFiles] = useState([null]);
-    const [loading, setLoading] = useState(false);
+    const [wikipediaTitle, setWikipediaTitle] = useState('');
     const [summary, setSummary] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleYoutubeLinkChange = (index, value) => {
         const newLinks = [...youtubeLinks];
         newLinks[index] = value;
         setYoutubeLinks(newLinks);
+        autoSubmit(newLinks, websiteLinks, wikipediaTitle);
     };
 
     const handleWebsiteLinkChange = (index, value) => {
         const newLinks = [...websiteLinks];
         newLinks[index] = value;
         setWebsiteLinks(newLinks);
-    };
-
-    const handleWikipediaTitleChange = (index, value) => {
-        const newTitles = [...wikipediaTitles];
-        newTitles[index] = value;
-        setWikipediaTitles(newTitles);
+        autoSubmit(youtubeLinks, newLinks, wikipediaTitle);
     };
 
     const handleAudioFileChange = (index, file) => {
@@ -44,8 +40,52 @@ const SimplePage = () => {
         setDocumentFiles(newFiles);
     };
 
-    const autoSubmit = async () => {
-        const formData = new FormData();
+    const handleAddYoutubeLink = () => {
+        if (youtubeLinks.length < 5) {
+            setYoutubeLinks([...youtubeLinks, '']);
+        }
+    };
+
+    const handleRemoveYoutubeLink = (index) => {
+        const newLinks = youtubeLinks.filter((_, i) => i !== index);
+        setYoutubeLinks(newLinks);
+    };
+
+    const handleAddWebsiteLink = () => {
+        if (websiteLinks.length < 5) {
+            setWebsiteLinks([...websiteLinks, '']);
+        }
+    };
+
+    const handleRemoveWebsiteLink = (index) => {
+        const newLinks = websiteLinks.filter((_, i) => i !== index);
+        setWebsiteLinks(newLinks);
+    };
+
+    const handleAddAudioFile = () => {
+        if (audioFiles.length < 5) {
+            setAudioFiles([...audioFiles, null]);
+        }
+    };
+
+    const handleRemoveAudioFile = (index) => {
+        const newFiles = audioFiles.filter((_, i) => i !== index);
+        setAudioFiles(newFiles);
+    };
+
+    const handleAddDocumentFile = () => {
+        if (documentFiles.length < 5) {
+            setDocumentFiles([...documentFiles, null]);
+        }
+    };
+
+    const handleRemoveDocumentFile = (index) => {
+        const newFiles = documentFiles.filter((_, i) => i !== index);
+        setDocumentFiles(newFiles);
+    };
+
+    const autoSubmit = async (youtubeLinks, websiteLinks, wikipediaTitle) => {
+        const formData = new URLSearchParams();
         formData.append('username', 'Harsh');
 
         youtubeLinks.forEach((link, index) => {
@@ -56,27 +96,19 @@ const SimplePage = () => {
             if (link) formData.append(`website_url${index + 1}`, link);
         });
 
-        wikipediaTitles.forEach((title, index) => {
-            if (title) formData.append(`wikipedia_title${index + 1}`, title);
-        });
-
-        audioFiles.forEach((file, index) => {
-            if (file) formData.append(`uploaded_file_audio${index + 1}`, file);
-        });
-
-        documentFiles.forEach((file, index) => {
-            if (file) formData.append(`uploaded_file${index + 1}`, file);
-        });
-
-        console.log('Form Data:', Array.from(formData.entries())); // Debugging line
+        if (wikipediaTitle) {
+            formData.append('wikipedia_title1', wikipediaTitle);
+        }
 
         setLoading(true);
-        setSummary('');
 
         try {
             const response = await fetch('http://15.206.73.250:5000/api/summary', {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
             });
 
             if (!response.ok) {
@@ -90,50 +122,6 @@ const SimplePage = () => {
             setSummary('An error occurred while fetching the summary.');
         } finally {
             setLoading(false);
-        }
-    };
-
-    const addInputField = (type) => {
-        switch (type) {
-            case 'youtube':
-                if (youtubeLinks.length < 5) setYoutubeLinks([...youtubeLinks, '']);
-                break;
-            case 'website':
-                if (websiteLinks.length < 5) setWebsiteLinks([...websiteLinks, '']);
-                break;
-            case 'wikipedia':
-                if (wikipediaTitles.length < 5) setWikipediaTitles([...wikipediaTitles, '']);
-                break;
-            case 'audio':
-                if (audioFiles.length < 5) setAudioFiles([...audioFiles, null]);
-                break;
-            case 'document':
-                if (documentFiles.length < 5) setDocumentFiles([...documentFiles, null]);
-                break;
-            default:
-                break;
-        }
-    };
-
-    const removeInputField = (type, index) => {
-        switch (type) {
-            case 'youtube':
-                setYoutubeLinks(youtubeLinks.filter((_, i) => i !== index));
-                break;
-            case 'website':
-                setWebsiteLinks(websiteLinks.filter((_, i) => i !== index));
-                break;
-            case 'wikipedia':
-                setWikipediaTitles(wikipediaTitles.filter((_, i) => i !== index));
-                break;
-            case 'audio':
-                setAudioFiles(audioFiles.filter((_, i) => i !== index));
-                break;
-            case 'document':
-                setDocumentFiles(documentFiles.filter((_, i) => i !== index));
-                break;
-            default:
-                break;
         }
     };
 
@@ -152,10 +140,10 @@ const SimplePage = () => {
                             />
                             <div className="button-container">
                                 {index > 0 && (
-                                    <button className="remove-button" onClick={() => removeInputField('youtube', index)}>X</button>
+                                    <button className="remove-button" onClick={() => handleRemoveYoutubeLink(index)}>X</button>
                                 )}
                                 {index === youtubeLinks.length - 1 && youtubeLinks.length < 5 && (
-                                    <button onClick={() => addInputField('youtube')} className="add-button">+</button>
+                                    <button onClick={handleAddYoutubeLink} className="add-button">+</button>
                                 )}
                             </div>
                         </div>
@@ -175,33 +163,10 @@ const SimplePage = () => {
                             />
                             <div className="button-container">
                                 {index > 0 && (
-                                    <button className="remove-button" onClick={() => removeInputField('website', index)}>X</button>
+                                    <button className="remove-button" onClick={() => handleRemoveWebsiteLink(index)}>X</button>
                                 )}
                                 {index === websiteLinks.length - 1 && websiteLinks.length < 5 && (
-                                    <button onClick={() => addInputField('website')} className="add-button">+</button>
-                                )}
-                            </div>
-                        </div>
-                        {index > 0 && <div className="vertical-line" />}
-                    </div>
-                ))}
-
-                {wikipediaTitles.map((title, index) => (
-                    <div className="input-container" key={index}>
-                        {!index && <img src={websiteIcon} alt="Wikipedia" className="input-icon" />}
-                        <div className={`input-wrapper ${index > 0 ? 'sub-input' : ''}`} style={{ '--input-index': index }}>
-                            <input
-                                type="text"
-                                placeholder="Paste Wikipedia Title"
-                                value={title}
-                                onChange={(e) => handleWikipediaTitleChange(index, e.target.value)}
-                            />
-                            <div className="button-container">
-                                {index > 0 && (
-                                    <button className="remove-button" onClick={() => removeInputField('wikipedia', index)}>X</button>
-                                )}
-                                {index === wikipediaTitles.length - 1 && wikipediaTitles.length < 5 && (
-                                    <button onClick={() => addInputField('wikipedia')} className="add-button">+</button>
+                                    <button onClick={handleAddWebsiteLink} className="add-button">+</button>
                                 )}
                             </div>
                         </div>
@@ -220,10 +185,10 @@ const SimplePage = () => {
                             />
                             <div className="button-container">
                                 {index > 0 && (
-                                    <button className="remove-button" onClick={() => removeInputField('audio', index)}>X</button>
+                                    <button className="remove-button" onClick={() => handleRemoveAudioFile(index)}>X</button>
                                 )}
                                 {index === audioFiles.length - 1 && audioFiles.length < 5 && (
-                                    <button onClick={() => addInputField('audio')} className="add-button">+</button>
+                                    <button onClick={handleAddAudioFile} className="add-button">+</button>
                                 )}
                             </div>
                         </div>
@@ -241,22 +206,29 @@ const SimplePage = () => {
                             />
                             <div className="button-container">
                                 {index > 0 && (
-                                    <button className="remove-button" onClick={() => removeInputField('document', index)}>X</button>
+                                    <button className="remove-button" onClick={() => handleRemoveDocumentFile(index)}>X</button>
                                 )}
                                 {index === documentFiles.length - 1 && documentFiles.length < 5 && (
-                                    <button onClick={() => addInputField('document')} className="add-button">+</button>
+                                    <button onClick={handleAddDocumentFile} className="add-button">+</button>
                                 )}
                             </div>
                         </div>
                         {index > 0 && <div className="vertical-line" />}
                     </div>
                 ))}
+
             </div>
 
-            <button onClick={autoSubmit} disabled={loading}>Submit</button>
-
-            {loading && <p>Loading...</p>}
-            {summary && <div className="summary">{summary}</div>}
+            {loading ? (
+                <p>Generating summary...</p>
+            ) : (
+                summary && (
+                    <div className="summary-result">
+                        <h3>Summary:</h3>
+                        <p>{summary}</p>
+                    </div>
+                )
+            )}
         </div>
     );
 };
