@@ -4,14 +4,24 @@
     padding-bottom: 15vh;
     position: relative;
 }
-
+.loading-indicator {
+    position: fixed; /* or absolute depending on your layout */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Make sure it's above other elements */
+  }
+  
 .main .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 22px;
     padding: 20px;
-
 }
 
 .main .nav .nav-right {
@@ -20,7 +30,6 @@
     gap: 20px;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .main .nav img {
@@ -35,7 +44,6 @@
     padding-top: 100px;
 }
 
-
 .main-container .box {
     padding: 30px;
     border: none;
@@ -43,9 +51,11 @@
     background-color: #1f2c34;
     border-top: 1px solid black;
     border-bottom: 1px solid #454a4e;
-    margin-top: -100px ;
+    margin-top: -100px;
     width: 900px;
     height: 500px;
+    display: flex;
+    flex-direction: column; /* Allow vertical stacking */
 }
 
 .box p {
@@ -54,18 +64,18 @@
 
 .main-container .greet {
     padding: 30px;
-    margin-top: 120px 0px;
+    margin-top: 20px; /* Adjust margin to create space */
     font-size: 56px;
     color: #c4c7c5;
     font-weight: 500;
     padding-top: 20px;
     padding-left: 20px;
-    background-color: #1f2c34;
+   
+    background: rgba(31, 44, 52, 0.8); /* Semi-transparent background */
+    border-radius: 10px; /* Optional: add rounded corners */
 }
 
-.main-container .greet-text{
-   
-}
+.main-container .greet-text {}
 
 .main-container .greet span {
     background: -webkit-linear-gradient(160deg, #a9e2ff, #50575d);
@@ -146,13 +156,11 @@
     font-size: 15px;
 }
 
-
 .bottom-info {
     padding-left: 30px;
     color: #585858;
     font-size: 20px;
 }
-
 
 .main-bottom {
     position: absolute;
@@ -191,14 +199,56 @@
     font-size: 18px;
 }
 
-
 .search-box div {
     display: flex;
     align-items: center;
     gap: 35px;
 }
 
-.output{
+.output {
     color: white;
-    background-color: #0000FF;
+    flex: 1; /* Allow the output area to expand */
+}
+
+.submit{
+    background-color: transparent;
+    border: none;
+}
+.summary-display {
+    max-height: 495px; /* Set a maximum height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 120%;
+    max-width: 900px;
+    margin-left: -30px;
+    margin-top: 0px;
+    padding: 10px; /* Add some padding */
+    background: rgba(31, 44, 52, 0.8); /* Semi-transparent background */
+    border-radius: 10px; /* Optional: rounded corners */
+}
+
+/* Slim scrollbar styles */
+.summary-display::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+    background: rgba(31, 44, 52, 0.8); /* Semi-transparent background */
+}
+
+.summary-display::-webkit-scrollbar-thumb {
+    background: #888; /* Scrollbar color */
+    border-radius: 10px; /* Rounded scrollbar */
+}
+
+.summary-display::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker color on hover */
+}
+
+.summary-list {
+    list-style-type: none; /* Remove default list styles */
+    padding: 0; /* Remove padding */
+    background: rgba(31, 44, 52, 0.8); /* Semi-transparent background */
+}
+
+.summary-list .subtitle {
+    margin: 10px 0; /* Add spacing between subtitles */
+    color: white; /* Ensure text color is white */
+    background: rgba(31, 44, 52, 0.8); /* Semi-transparent background */
 }

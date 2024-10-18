@@ -9,6 +9,7 @@ export const Sidebar = ({ setIsSidebarVisible }) => {
 
     const handleCollapse = () => {
         setIsSidebarVisible(false);
+        setIsLinkbarVisible(false); // Close Linkbar when sidebar is collapsed
     };
 
     const toggleLinkbarVisibility = () => {
@@ -21,16 +22,17 @@ export const Sidebar = ({ setIsSidebarVisible }) => {
                 <div className='top'>
                     <div onClick={handleCollapse} className='menu'>
                         <img src={assets.sidebar} alt="Sidebar Icon" />
-                    </div>
-
+                        
                     {/* Toggle Linkbar Image */}
-                    <div className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
+                    <span  className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
                         <img 
                             src={toggleIcon} 
                             alt="Toggle Linkbar" 
                             className="toggle-linkbar-icon"
                         />
+                    </span>
                     </div>
+
 
                     <div className="new-chat">
                         <img src={assets.plus} alt="New Chat" />
@@ -65,7 +67,8 @@ export const Sidebar = ({ setIsSidebarVisible }) => {
                     </div>
                 </div>
             </div>
-            {isLinkbarVisible && <Linkbar />} {/* Conditionally render Linkbar */}
+            {/* Only render Linkbar if it is visible */}
+            {isLinkbarVisible && <Linkbar setSummary={() => {}} />} {/* Pass setSummary or handle accordingly */}
         </div>
     );
 };

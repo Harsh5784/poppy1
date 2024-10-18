@@ -1,86 +1,205 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
-import upArrow from '../../assets/up_arrow.png'; // Adjust the path as necessary
+import upArrow from '../../assets/up_arrow.png';
+import axios from 'axios';
 
-export const Main = ({ summary }) => { // Receive summary as a prop
-    // Check if the summary is an error message
-    const isErrorMessage = summary === 'An error occurred while fetching the summary.';
-    const hasOutput = summary && !isErrorMessage;
+export const Main = ({ summary }) => {
+  const defaultUsername = 'Harsh';
+  const isErrorMessage = summary === 'An error occurred while fetching the summary.';
+  const hasOutput = summary && !isErrorMessage;
+  const [apiSummary, setApiSummary] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [inputMessage, setInputMessage] = useState('');
 
-    return (
-        <div className='main'>
-            <div className="nav">
-                <img src={assets.logo} alt="Logo" />
-                <div className='nav-right'>
-                    <img src={assets.home_icon} alt="Home" />
-                    <img src={assets.calendar} alt="Calendar" />
-                    <img src={assets.notification_bell} alt="Notifications" />
-                    <img src={assets.chat_icon} alt="Chat" />
-                    <img src={assets.tool_icon} alt="Tools" />
-                    <img src={assets.user_icon} alt="User" />
-                </div>
-            </div>
+  const parseSummary = (text) => {
+    const sections = text.replace(/\*\*/g, '').split('\n').map(section => section.trim());
+    return sections.map(section => section.trim()).filter(sub => sub);
+  };
 
-            <div className="main-container">
-                <div className='box'>
-                    <div className="greet">
-                        {/* Conditionally render greeting based on output availability */}
-                        {!hasOutput && (
-                            <>
-                        <img className="logo" src={assets.logo} alt="Logo" />
-                            <div className="greet-text">
-                                <p><span>Hello, User</span></p>
-                                <p>How can I help you today?</p>
-                            </div>
-                            </>
-                        )}
-                    </div>
+  const extractLinks = (data) => {
+    const links = {
+      youtube: data.youtubeLinks?.filter(link => link) || [],
+      website: data.websiteLinks?.filter(link => link) || [],
+      wikipedia: data.wikipediaTitles?.filter(title => title) || [],
+      uploadedFiles: data.uploadedFiles?.filter(file => file) || [],
+    };
+    return links;
+  };
 
-                    {/* Only show the default info if there's no output */}
-                    {!hasOutput && (
-                        <p className='bottom-info'>
-                            Ask anything from multiple resources
-                        </p>
-                    )}
+  const sendDataToAPI = async (validLinks) => {
+    const formData = new URLSearchParams();
+    formData.append('username', defaultUsername);
 
-                    {/* Only render the cards if there's no output */}
-                    {!hasOutput && (
-                        <div className="cards">
-                            <div className="card">
-                                <h3 className='yt'>Youtube Videos</h3>
-                                <p>Prompt using a YouTube video link</p>
-                            </div>
-                            <div className="card">
-                                <h3 className='image'>Image</h3>
-                                <p>Prompt using a picture</p>
-                            </div>
-                            <div className="card">
-                                <h3 className='audio'>Audio File</h3>
-                                <p>Prompt using recorded audio files</p>
-                            </div>
-                            <div className="card">
-                                <h3 className='website'>Website Link</h3>
-                                <p>Prompt using a website link</p>
-                            </div>
-                        </div>
-                    )}
+    validLinks.youtube.forEach((link, index) => {
+      formData.append(`youtube_link${index + 1}`, link);
+    });
 
-                    {/* Output display section */}
-                    <div className="output">
-                        {hasOutput && <div className="summary-display">{summary}</div>}
-                    </div>
-                </div>
+    validLinks.uploadedFiles.forEach((file, index) => {
+      formData.append(`uploaded_file${index + 1}`, file);
+    });
 
-                <div className="main-bottom">
-                    <div className='search-box'>
-                        <input type="text" placeholder='Message' />
-                        <div>
-                            <img src={upArrow} alt="Send" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+    validLinks.website.forEach((link, index) => {
+      formData.append(`website_url${index + 1}`, link);
+    });
+
+    validLinks.wikipedia.forEach((title, index) => {
+      formData.append(`wikipedia_title${index + 1}`, title);
+    });
+
+    if (validLinks.youtube.length === 0 && validLinks.website.length === 0) {
+      alert("Please provide at least one valid link.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://15.206.73.250:5000/api/summary', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      setApiSummary(response.data.summary);
+    } catch (error) {
+      console.error('Error sending data to API:', error);
+      alert(`Error: ${error.response?.data.error || 'Bad Request'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const askQuestion = async (question) => {
+    const formData = new URLSearchParams();
+    formData.append('username', defaultUsername);
+    formData.append('question', question);
+
+    // Add previously extracted links
+    const parsedData = JSON.parse(summary);
+    const validLinks = extractLinks(parsedData);
+    validLinks.youtube.forEach((link, index) => {
+      formData.append(`youtube_link${index + 1}`, link);
+    });
+    validLinks.uploadedFiles.forEach((file, index) => {
+      formData.append(`uploaded_file${index + 1}`, file);
+    });
+    validLinks.website.forEach((link, index) => {
+      formData.append(`website_url${index + 1}`, link);
+    });
+    validLinks.wikipedia.forEach((title, index) => {
+      formData.append(`wikipedia_title${index + 1}`, title);
+    });
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://15.206.73.250:5000/api/ask_question', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      setApiSummary(response.data.answer); // Display the new API response
+    } catch (error) {
+      console.error('Error asking question:', error);
+      alert(`Error: ${error.response?.data.error || 'Bad Request'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const parsedData = hasOutput ? JSON.parse(summary) : null;
+
+    if (inputMessage.trim()) {
+      askQuestion(inputMessage); // Send user question to the new API
+      setInputMessage(''); // Clear input field
+    } else if (parsedData) {
+      const validLinks = extractLinks(parsedData);
+      sendDataToAPI(validLinks); // Send data to summary API
+    }
+  };
+
+  const summaries = apiSummary ? parseSummary(apiSummary) : [];
+
+  return (
+    <div className='main'>
+      <div className="nav">
+        <img src={assets.logo} alt="Logo" />
+        <div className='nav-right'>
+          <img src={assets.home_icon} alt="Home" />
+          <img src={assets.calendar} alt="Calendar" />
+          <img src={assets.notification_bell} alt="Notifications" />
+          <img src={assets.chat_icon} alt="Chat" />
+          <img src={assets.tool_icon} alt="Tools" />
+          <img src={assets.user_icon} alt="User" />
         </div>
-    );
+      </div>
+
+      <div className="main-container">
+        <div className='box'>
+          {!loading && !apiSummary && (
+            <>
+              <div className="greet">
+                <img className="logo" src={assets.logo} alt="Logo" />
+                <div className="greet-text">
+                  <p><span>Hello, {defaultUsername}</span></p>
+                  <p>How can I help you today?</p>
+                </div>
+              </div>
+
+              <p className='bottom-info'>Ask anything from multiple resources</p>
+
+              <div className="cards">
+                <div className="card">
+                  <h3 className='yt'>YouTube Videos</h3>
+                  <p>Prompt using a YouTube video link</p>
+                </div>
+                <div className="card">
+                  <h3 className='image'>Image</h3>
+                  <p>Prompt using a picture</p>
+                </div>
+                <div className="card">
+                  <h3 className='audio'>Audio File</h3>
+                  <p>Prompt using recorded audio files</p>
+                </div>
+                <div className="card">
+                  <h3 className='website'>Website Link</h3>
+                  <p>Prompt using a website link</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {loading ? (
+            <div className="loading">Loading...</div>
+          ) : (
+            apiSummary && (
+              <div className="summary-display">
+                <ul className="summary-list">
+                  {summaries.map((summary, index) => (
+                    <li key={index} className="subtitle">{summary}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          )}
+        </div>
+
+        <div className="main-bottom">
+          <form onSubmit={handleSubmit}>
+            <div className='search-box'>
+              <input 
+                type="text" 
+                placeholder='Message (optional)' 
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+              />
+              <button type="submit">
+                <img src={upArrow} alt="Send" />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
