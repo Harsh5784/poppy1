@@ -11,6 +11,7 @@ export const Main = ({ summary }) => {
   const [apiSummary, setApiSummary] = useState('');
   const [loading, setLoading] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
+  const [actionType, setActionType] = useState('summary');
 
   const parseSummary = (text) => {
     const sections = text.replace(/\*\*/g, '').split('\n').map(section => section.trim());
@@ -73,7 +74,6 @@ export const Main = ({ summary }) => {
     formData.append('username', defaultUsername);
     formData.append('question', question);
 
-    // Add previously extracted links
     const parsedData = JSON.parse(summary);
     const validLinks = extractLinks(parsedData);
     validLinks.youtube.forEach((link, index) => {
@@ -96,7 +96,7 @@ export const Main = ({ summary }) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      setApiSummary(response.data.answer); // Display the new API response
+      setApiSummary(response.data.answer);
     } catch (error) {
       console.error('Error asking question:', error);
       alert(`Error: ${error.response?.data.error || 'Bad Request'}`);
@@ -105,16 +105,26 @@ export const Main = ({ summary }) => {
     }
   };
 
+  const handleActionChange = (e) => {
+    const newActionType = e.target.value;
+    setActionType(newActionType);
+
+    if (newActionType === 'summary' && hasOutput) {
+      const parsedData = JSON.parse(summary);
+      const validLinks = extractLinks(parsedData);
+      sendDataToAPI(validLinks);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const parsedData = hasOutput ? JSON.parse(summary) : null;
-
-    if (inputMessage.trim()) {
-      askQuestion(inputMessage); // Send user question to the new API
-      setInputMessage(''); // Clear input field
-    } else if (parsedData) {
+    if (actionType === 'qna' && inputMessage.trim()) {
+      askQuestion(inputMessage);
+      // Do not clear the input field after submitting
+    } else if (actionType === 'summary') {
+      const parsedData = JSON.parse(summary);
       const validLinks = extractLinks(parsedData);
-      sendDataToAPI(validLinks); // Send data to summary API
+      sendDataToAPI(validLinks);
     }
   };
 
@@ -124,6 +134,14 @@ export const Main = ({ summary }) => {
     <div className='main'>
       <div className="nav">
         <img src={assets.logo} alt="Logo" />
+        <select 
+          value={actionType} 
+          onChange={handleActionChange}
+          className="nav-dropdown"
+        >
+          <option value="summary">Summary</option>
+          <option value="qna">Q&A</option>
+        </select>
         <div className='nav-right'>
           <img src={assets.home_icon} alt="Home" />
           <img src={assets.calendar} alt="Calendar" />
@@ -189,15 +207,20 @@ export const Main = ({ summary }) => {
             <div className='search-box'>
               <input 
                 type="text" 
-                placeholder='Message (optional)' 
+                placeholder={actionType === 'summary' ? 'Switch to Q&A to ask a question' : 'Message (optional)'} 
                 value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
+                onChange={(e) => actionType === 'qna' && setInputMessage(e.target.value)}
+                disabled={actionType === 'summary'} // Disable input in summary mode
               />
-              <button type="submit">
+              
+              <button type="submit" disabled={actionType === 'summary'}>
                 <img src={upArrow} alt="Send" />
               </button>
             </div>
           </form>
+          {actionType === 'summary' && (
+            <p className="switch-message">.</p>
+          )}
         </div>
       </div>
     </div>
