@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect import
 import './linkbar.css';
 import youtubeIcon from '../../../assets/youtube_links.jpg';
 import websiteIcon from '../../../assets/website.jpg';
@@ -11,34 +11,91 @@ const SimplePage = ({ setSummary }) => {
   const [wikipediaTitles, setWikipediaTitles] = useState(['']);
   const [audioFiles, setAudioFiles] = useState([null]);
   const [documentFiles, setDocumentFiles] = useState([null]);
+  const [loading, setLoading] = useState(false);
+  const [localSummary, setLocalSummary] = useState(''); // Renamed to localSummary
 
-  const handleInputChange = (type, index, value) => {
-    switch (type) {
-      case 'youtube':
-        setYoutubeLinks(prev => prev.map((link, i) => (i === index ? value : link)));
-        break;
-      case 'website':
-        setWebsiteLinks(prev => prev.map((link, i) => (i === index ? value : link)));
-        break;
-      case 'wikipedia':
-        setWikipediaTitles(prev => prev.map((title, i) => (i === index ? value : title)));
-        break;
-      default:
-        break;
+  const autoSubmit = async () => {
+    const formData = new FormData();
+    formData.append('username', 'User');
+
+    youtubeLinks.forEach((link, index) => {
+      if (link) formData.append(`youtube_link${index + 1}`, link);
+    });
+
+    websiteLinks.forEach((link, index) => {
+      if (link) formData.append(`website_url${index + 1}`, link);
+    });
+
+    wikipediaTitles.forEach((title, index) => {
+      if (title) formData.append(`wikipedia_title${index + 1}`, title);
+    });
+
+    audioFiles.forEach((file, index) => {
+      if (file) formData.append(`uploaded_file_audio${index + 1}`, file);
+    });
+
+    documentFiles.forEach((file, index) => {
+      if (file) formData.append(`uploaded_file${index + 1}`, file);
+    });
+
+    setLoading(true);
+    setLocalSummary('');
+
+    try {
+      const response = await fetch('http://15.206.73.250:5000/api/summary', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setLocalSummary(data.summary);
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('Error fetching summary:', error);
+      const errorMessage = 'An error occurred while fetching the summary.';
+      setLocalSummary(errorMessage);
+      setSummary(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleFileChange = (type, index, file) => {
-    switch (type) {
-      case 'audio':
-        setAudioFiles(prev => prev.map((audio, i) => (i === index ? file : audio)));
-        break;
-      case 'document':
-        setDocumentFiles(prev => prev.map((doc, i) => (i === index ? file : doc)));
-        break;
-      default:
-        break;
-    }
+  useEffect(() => {
+    autoSubmit();
+  }, [youtubeLinks, websiteLinks, wikipediaTitles, audioFiles, documentFiles]);
+
+  const handleYoutubeLinkChange = (index, value) => {
+    const newLinks = [...youtubeLinks];
+    newLinks[index] = value;
+    setYoutubeLinks(newLinks);
+  };
+
+  const handleWebsiteLinkChange = (index, value) => {
+    const newLinks = [...websiteLinks];
+    newLinks[index] = value;
+    setWebsiteLinks(newLinks);
+  };
+
+  const handleWikipediaTitleChange = (index, value) => {
+    const newTitles = [...wikipediaTitles];
+    newTitles[index] = value;
+    setWikipediaTitles(newTitles);
+  };
+
+  const handleAudioFileChange = (index, file) => {
+    const newFiles = [...audioFiles];
+    newFiles[index] = file;
+    setAudioFiles(newFiles);
+  };
+
+  const handleDocumentFileChange = (index, file) => {
+    const newFiles = [...documentFiles];
+    newFiles[index] = file;
+    setDocumentFiles(newFiles);
   };
 
   const addInputField = (type) => {
@@ -93,11 +150,11 @@ const SimplePage = ({ setSummary }) => {
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={youtubeIcon} alt="YouTube" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
+            <div className={`input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
               <input
                 type="text"
                 value={link}
-                onChange={(e) => handleInputChange('youtube', index, e.target.value)}
+                onChange={(e) => handleYoutubeLinkChange(index, e.target.value)}
                 placeholder='YouTube Link'
               />
               {index > 0 && (
@@ -115,11 +172,11 @@ const SimplePage = ({ setSummary }) => {
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={websiteIcon} alt="Website" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
+            <div className={`input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
               <input
                 type="text"
                 value={link}
-                onChange={(e) => handleInputChange('website', index, e.target.value)}
+                onChange={(e) => handleWebsiteLinkChange(index, e.target.value)}
                 placeholder='Website Link'
               />
               {index > 0 && (
@@ -137,11 +194,11 @@ const SimplePage = ({ setSummary }) => {
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={fileIcon} alt="Wikipedia" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
+            <div className={`input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
               <input
                 type="text"
                 value={title}
-                onChange={(e) => handleInputChange('wikipedia', index, e.target.value)}
+                onChange={(e) => handleWikipediaTitleChange(index, e.target.value)}
                 placeholder='Wikipedia Title'
               />
               {index > 0 && (
@@ -159,11 +216,11 @@ const SimplePage = ({ setSummary }) => {
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={audioIcon} alt="Audio" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
+            <div className={`input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
               <input
                 type="file"
                 accept="audio/*"
-                onChange={(e) => handleFileChange('audio', index, e.target.files[0])}
+                onChange={(e) => handleAudioFileChange(index, e.target.files[0])}
               />
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('audio', index)}>X</span>
@@ -180,11 +237,11 @@ const SimplePage = ({ setSummary }) => {
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={fileIcon} alt="Document" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
+            <div className={`input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
               <input
                 type="file"
                 accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*"
-                onChange={(e) => handleFileChange('document', index, e.target.files[0])}
+                onChange={(e) => handleDocumentFileChange(index, e.target.files[0])}
               />
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('document', index)}>X</span>
@@ -196,6 +253,8 @@ const SimplePage = ({ setSummary }) => {
           </div>
         ))}
       </div>
+      {loading && <div>Loading...</div>} {/* Optional loading indicator */}
+      {localSummary && <div className="summary">{localSummary}</div>} {/* Display summary */}
     </div>
   );
 };
