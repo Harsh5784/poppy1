@@ -41,9 +41,7 @@
     height: 100%;
     z-index: 0;
     width: 2px; /* Adjust width as needed */
-    left: calc(50% - 1px); /* Center the line */
 }
-
 
 .input-wrapper {
     display: flex;
@@ -111,21 +109,4 @@
 .summary-result {
     margin-top: 20px;
     text-align: left;
-}
-.input-wrapper input[type="file"] {
-    position: absolute; /* Position it absolutely */
-    opacity: 0; /* Hide it */
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    cursor: pointer; /* Pointer on hover */
-}
-
-.upload-image {
-    width: 50%; /* Set width for the upload icon */
-    height: 60%; /* Set height for the upload icon */
-    cursor: pointer; /* Pointer on hover */
-    position: absolute; /* Position it absolutely within the input wrapper */
-    top: 50%; /* Center vertically */
-    left: 15px; /* Adjust left position */
-    transform: translateY(-50%); /* Centering adjustment */
 }

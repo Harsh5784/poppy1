@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect import
+import React, { useState, useEffect } from 'react';
 import './linkbar.css';
 import youtubeIcon from '../../../assets/youtube_links.jpg';
 import websiteIcon from '../../../assets/website.jpg';
@@ -11,94 +11,83 @@ const SimplePage = ({ setSummary }) => {
   const [wikipediaTitles, setWikipediaTitles] = useState(['']);
   const [audioFiles, setAudioFiles] = useState([null]);
   const [documentFiles, setDocumentFiles] = useState([null]);
-  const [loading, setLoading] = useState(false);
-  const [localSummary, setLocalSummary] = useState(''); // Renamed to localSummary
 
-  const autoSubmit = async () => {
-    const formData = new FormData();
-    formData.append('username', 'User');
+  const handleInputChange = (type, index, value) => {
+    const newState = {
+      youtubeLinks,
+      websiteLinks,
+      wikipediaTitles,
+      audioFiles,
+      documentFiles,
+    };
 
-    youtubeLinks.forEach((link, index) => {
-      if (link) formData.append(`youtube_link${index + 1}`, link);
-    });
+    switch (type) {
+      case 'youtube':
+        newState.youtubeLinks[index] = value;
+        setYoutubeLinks(newState.youtubeLinks);
+        break;
+      case 'website':
+        newState.websiteLinks[index] = value;
+        setWebsiteLinks(newState.websiteLinks);
+        break;
+      case 'wikipedia':
+        newState.wikipediaTitles[index] = value;
+        setWikipediaTitles(newState.wikipediaTitles);
+        break;
+      default:
+        break;
+    }
+    
+    // Update summary whenever inputs change
+    setSummary(JSON.stringify(newState));
+  };
 
-    websiteLinks.forEach((link, index) => {
-      if (link) formData.append(`website_url${index + 1}`, link);
-    });
+  const handleFileChange = (type, index, file) => {
+    const newState = {
+      youtubeLinks,
+      websiteLinks,
+      wikipediaTitles,
+      audioFiles,
+      documentFiles,
+    };
 
-    wikipediaTitles.forEach((title, index) => {
-      if (title) formData.append(`wikipedia_title${index + 1}`, title);
-    });
+    switch (type) {
+      case 'audio':
+        newState.audioFiles[index] = file;
+        setAudioFiles(newState.audioFiles);
+        break;
+      case 'document':
+        newState.documentFiles[index] = file;
+        setDocumentFiles(newState.documentFiles);
+        break;
+      default:
+        break;
+    }
+    
+    // Update summary whenever files change
+    setSummary(JSON.stringify(newState));
+  };
 
-    audioFiles.forEach((file, index) => {
-      if (file) formData.append(`uploaded_file_audio${index + 1}`, file);
-    });
-
-    documentFiles.forEach((file, index) => {
-      if (file) formData.append(`uploaded_file${index + 1}`, file);
-    });
-
-    setLoading(true);
-    setLocalSummary('');
-
-    try {
-      const response = await fetch('http://15.206.73.250:5000/api/summary', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      setLocalSummary(data.summary);
-      setSummary(data.summary);
-    } catch (error) {
-      console.error('Error fetching summary:', error);
-      const errorMessage = 'An error occurred while fetching the summary.';
-      setLocalSummary(errorMessage);
-      setSummary(errorMessage);
-    } finally {
-      setLoading(false);
+  const canAddField = (type) => {
+    switch (type) {
+      case 'youtube':
+        return youtubeLinks.every(link => link.trim() !== '');
+      case 'website':
+        return websiteLinks.every(link => link.trim() !== '');
+      case 'wikipedia':
+        return wikipediaTitles.every(title => title.trim() !== '');
+      case 'audio':
+        return audioFiles.every(file => file !== null);
+      case 'document':
+        return documentFiles.every(file => file !== null);
+      default:
+        return false;
     }
   };
 
-  useEffect(() => {
-    autoSubmit();
-  }, [youtubeLinks, websiteLinks, wikipediaTitles, audioFiles, documentFiles]);
-
-  const handleYoutubeLinkChange = (index, value) => {
-    const newLinks = [...youtubeLinks];
-    newLinks[index] = value;
-    setYoutubeLinks(newLinks);
-  };
-
-  const handleWebsiteLinkChange = (index, value) => {
-    const newLinks = [...websiteLinks];
-    newLinks[index] = value;
-    setWebsiteLinks(newLinks);
-  };
-
-  const handleWikipediaTitleChange = (index, value) => {
-    const newTitles = [...wikipediaTitles];
-    newTitles[index] = value;
-    setWikipediaTitles(newTitles);
-  };
-
-  const handleAudioFileChange = (index, file) => {
-    const newFiles = [...audioFiles];
-    newFiles[index] = file;
-    setAudioFiles(newFiles);
-  };
-
-  const handleDocumentFileChange = (index, file) => {
-    const newFiles = [...documentFiles];
-    newFiles[index] = file;
-    setDocumentFiles(newFiles);
-  };
-
   const addInputField = (type) => {
+    if (!canAddField(type)) return;
+
     switch (type) {
       case 'youtube':
         if (youtubeLinks.length < 5) setYoutubeLinks([...youtubeLinks, '']);
@@ -123,29 +112,38 @@ const SimplePage = ({ setSummary }) => {
   const removeInputField = (type, index) => {
     switch (type) {
       case 'youtube':
-        setYoutubeLinks(prev => prev.filter((_, i) => i !== index));
+        setYoutubeLinks(youtubeLinks.filter((_, i) => i !== index));
         break;
       case 'website':
-        setWebsiteLinks(prev => prev.filter((_, i) => i !== index));
+        setWebsiteLinks(websiteLinks.filter((_, i) => i !== index));
         break;
       case 'wikipedia':
-        setWikipediaTitles(prev => prev.filter((_, i) => i !== index));
+        setWikipediaTitles(wikipediaTitles.filter((_, i) => i !== index));
         break;
       case 'audio':
-        setAudioFiles(prev => prev.filter((_, i) => i !== index));
+        setAudioFiles(audioFiles.filter((_, i) => i !== index));
         break;
       case 'document':
-        setDocumentFiles(prev => prev.filter((_, i) => i !== index));
+        setDocumentFiles(documentFiles.filter((_, i) => i !== index));
         break;
       default:
         break;
     }
+    
+    // Update summary after removing
+    const newState = {
+      youtubeLinks,
+      websiteLinks,
+      wikipediaTitles,
+      audioFiles,
+      documentFiles,
+    };
+    setSummary(JSON.stringify(newState));
   };
 
   return (
     <div className="simple-page">
       <div className="input-fields">
-        {/* YouTube Links */}
         {youtubeLinks.map((link, index) => (
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
@@ -160,14 +158,11 @@ const SimplePage = ({ setSummary }) => {
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('youtube', index)}>X</span>
               )}
-              {index === youtubeLinks.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('youtube')}>+</span>
-              )}
+              <span className="add-button" onClick={() => addInputField('youtube')}>+</span>
             </div>
           </div>
         ))}
 
-        {/* Website Links */}
         {websiteLinks.map((link, index) => (
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
@@ -182,14 +177,11 @@ const SimplePage = ({ setSummary }) => {
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('website', index)}>X</span>
               )}
-              {index === websiteLinks.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('website')}>+</span>
-              )}
+              <span className="add-button" onClick={() => addInputField('website')}>+</span>
             </div>
           </div>
         ))}
 
-        {/* Wikipedia Titles */}
         {wikipediaTitles.map((title, index) => (
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
@@ -204,14 +196,11 @@ const SimplePage = ({ setSummary }) => {
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('wikipedia', index)}>X</span>
               )}
-              {index === wikipediaTitles.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('wikipedia')}>+</span>
-              )}
+              <span className="add-button" onClick={() => addInputField('wikipedia')}>+</span>
             </div>
           </div>
         ))}
 
-        {/* Audio Files */}
         {audioFiles.map((file, index) => (
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
@@ -225,14 +214,11 @@ const SimplePage = ({ setSummary }) => {
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('audio', index)}>X</span>
               )}
-              {index === audioFiles.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('audio')}>+</span>
-              )}
+              <span className="add-button" onClick={() => addInputField('audio')}>+</span>
             </div>
           </div>
         ))}
 
-        {/* Document Files */}
         {documentFiles.map((file, index) => (
           <div className="input-container" key={index}>
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
@@ -246,9 +232,7 @@ const SimplePage = ({ setSummary }) => {
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('document', index)}>X</span>
               )}
-              {index === documentFiles.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('document')}>+</span>
-              )}
+              <span className="add-button" onClick={() => addInputField('document')}>+</span>
             </div>
           </div>
         ))}

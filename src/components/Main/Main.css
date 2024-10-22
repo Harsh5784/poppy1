@@ -4,24 +4,27 @@
     padding-bottom: 15vh;
     position: relative;
 }
-
+.loading-indicator {
+    position: fixed; /* or absolute depending on your layout */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Make sure it's above other elements */
+  }
+  
 .main .nav {
     display: flex;
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Space out items */
+    align-items: center;
+    justify-content: space-between;
     font-size: 22px;
     padding: 20px;
 
 }
 
-.nav-dropdown {
-    color: white;
-    align-self: flex-start; /* Aligns to the start of the flex container */
-    margin-left: 20px; /* Add margin to separate from logo */
-    background: transparent; /* Ensure background is as needed */
-    border: none; /* Remove border for cleaner look */
-    padding: 5px; /* Add padding for better touch area */
-}
 .main .nav .nav-right {
     display: flex;
     flex-direction: row;
@@ -184,20 +187,9 @@
     height: 45px;
 }
 
-.search-box button {
-    background-color: transparent; /* Remove the background */
-    border: none; /* Remove border */
-    border-radius: 50%; /* Make it circular */
-    width: 45px; /* Set width */
-    height: 45px; /* Set height */
-    display: flex; /* Center content */
-    align-items: center; /* Center content vertically */
-    justify-content: center; /* Center content horizontally */
-    cursor: pointer; /* Pointer on hover */
-}
-
-.search-box button img {
-    width: 24px; /* Adjust the size of the icon if needed */
+.search-box img {
+    width: 24px;
+    cursor: pointer;
 }
 
 .search-box input {

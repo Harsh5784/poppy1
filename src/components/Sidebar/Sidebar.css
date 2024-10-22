@@ -10,16 +10,18 @@
     color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.top {
-    display: flex; /* Use flexbox layout */
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Space items evenly */
-    background-color: #35404b; /* Keep your existing background color */
-}
 
 .sidebar img{
     width: 20px;
     
+}
+.toggle-linkbar-icon{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+.toggle-linkbar{
+    background-color: transparent;
 }
 
 .sidebar .top{

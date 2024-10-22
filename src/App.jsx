@@ -29,6 +29,7 @@ const App = () => {
         </div>
       )}
       
+      <SimplePage setSummary={setSummary} />
       <Main summary={summary} />
     </>
   );
