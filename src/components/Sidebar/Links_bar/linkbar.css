@@ -106,6 +106,37 @@
     display: block; /* Show on hover */
 }
 
+.custom-file-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px; /* Match input height */
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #28313a;
+    color: #fff;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    width: 90%; /* Match input width */
+    border: 1px solid transparent; /* Border for file input */
+}
+
+.custom-file-upload input {
+    display: none; /* Hide the default file input */
+}
+
+.custom-file-upload:hover {
+    border: 1px solid #fff; /* Change border on hover */
+}
+
+.file-preview {
+    width: 100px; /* Adjust width for better resolution */
+    height: 15px; /* Adjust height for better resolution */
+    object-fit: cover; /* Maintain aspect ratio */
+    margin-left: -40px;
+}
+
 .summary-result {
     margin-top: 20px;
     text-align: left;

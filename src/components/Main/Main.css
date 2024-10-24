@@ -5,7 +5,7 @@
     position: relative;
 }
 .loading-indicator {
-    position: fixed; /* or absolute depending on your layout */
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -13,16 +13,14 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000; /* Make sure it's above other elements */
-  }
-  
+    z-index: 1000;
+}
 .main .nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 22px;
     padding: 20px;
-
 }
 
 .main .nav .nav-right {
@@ -31,7 +29,6 @@
     gap: 20px;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .main .nav img {
@@ -46,7 +43,6 @@
     padding-top: 100px;
 }
 
-
 .main-container .box {
     padding: 30px;
     border: none;
@@ -54,7 +50,7 @@
     background-color: #1f2c34;
     border-top: 1px solid black;
     border-bottom: 1px solid #454a4e;
-    margin-top: -100px ;
+    margin-top: -100px;
     width: 900px;
     height: 500px;
 }
@@ -74,9 +70,7 @@
     background-color: #1f2c34;
 }
 
-.main-container .greet-text{
-   
-}
+.main-container .greet-text {}
 
 .main-container .greet span {
     background: -webkit-linear-gradient(160deg, #a9e2ff, #50575d);
@@ -154,9 +148,7 @@
 .main-container .card p {
     padding-top: 10px;
     color: #585858;
-    font-size: 15px;
 }
-
 
 .bottom-info {
     padding-left: 30px;
@@ -164,13 +156,13 @@
     font-size: 20px;
 }
 
-
 .main-bottom {
     position: absolute;
     bottom: 0;
     width: 100%;
     max-width: 900px;
     padding: 0px 20px;
+    color: white;
     margin: auto;
     margin-bottom: 30px;
 }
@@ -202,14 +194,60 @@
     font-size: 18px;
 }
 
-
 .search-box div {
     display: flex;
     align-items: center;
     gap: 35px;
 }
 
-.output{
+.output {
     color: white;
-    background-color: #0000FF;
+    background-color: #1f2c34;
 }
+
+/* Dropdown Menu Styles */
+/* Other styles remain unchanged */
+
+.nav-dropdown {
+    background-color: #1f2c34; /* Background color of the dropdown */
+    color: white; /* Text color */
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.nav-dropdown:hover {
+    background-color: #1f2c34; /* Remove hover effect if desired */
+}
+
+/* Style for options */
+.nav-dropdown option {
+    background-color: #1f2c34; /* Background color of options */
+    color: white; /* Text color of options */
+}
+
+/* Optional: Style for option hover */
+.nav-dropdown option:hover {
+    background-color: #000; /* Change to a darker shade on hover, or remove this rule */
+    color: white; /* Text color on hover */
+}
+
+.submit-button {
+    background: none; /* Remove background */
+    border: none; /* Remove border */
+    padding: 0; /* Remove padding */
+    cursor: pointer; /* Keep pointer cursor */
+}
+
+.submit-button img {
+    width: 24px; /* Adjust image size if needed */
+    filter: none; /* Remove any filters */
+    transition: none; /* Remove any transitions */
+}
+
+.submit-button:hover img {
+    filter: none; /* Ensure no effects on hover */
+}
+

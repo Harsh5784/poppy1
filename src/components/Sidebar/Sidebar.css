@@ -23,6 +23,13 @@
 .toggle-linkbar{
     background-color: transparent;
 }
+.sidebar .top {
+    display: flex; /* Use Flexbox */
+    justify-content: space-between; /* Space between the items */
+    align-items: center; /* Center items vertically */
+    background-color: #35404b;
+    padding: 10px 0; /* Optional: Add some padding */
+}
 
 .sidebar .top{
     background-color: #35404b;
