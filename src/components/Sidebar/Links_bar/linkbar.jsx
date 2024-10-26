@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './linkbar.css';
 import youtubeIcon from '../../../assets/youtube_links.jpg';
 import websiteIcon from '../../../assets/website.jpg';
@@ -11,6 +11,17 @@ const SimplePage = ({ setSummary }) => {
   const [wikipediaTitles, setWikipediaTitles] = useState(['']);
   const [audioFiles, setAudioFiles] = useState([null]);
   const [documentFiles, setDocumentFiles] = useState([null]);
+
+  useEffect(() => {
+    const updatedSummary = {
+      youtubeLinks,
+      websiteLinks,
+      wikipediaTitles,
+      audioFiles,
+      documentFiles,
+    };
+    setSummary(updatedSummary);
+  }, [youtubeLinks, websiteLinks, wikipediaTitles, audioFiles, documentFiles, setSummary]);
 
   const handleInputChange = (type, index, value) => {
     switch (type) {

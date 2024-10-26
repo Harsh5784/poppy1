@@ -34,7 +34,9 @@
 .sidebar .top{
     background-color: #35404b;
 }
-
+.top{
+    margin-top: -10px;
+}
 .sidebar .menu{
     display: flex;
     flex-direction: row;
@@ -83,7 +85,9 @@
 }
 
 
-
+.new-chat{
+    margin-top: -50px;
+}
 .sidebar .recent{
     display: flex;
     flex-direction: column;
@@ -198,3 +202,203 @@
     color: #aaa; /* Placeholder color */
 }
 
+.icon-container {
+    display: flex;
+    flex-direction: column; /* Stack icons vertically */
+    align-items: center; /* Center icons horizontally */
+    margin-top: 20px; /* Adjust spacing as needed */
+}
+
+.icon-container img {
+    width: 30px; /* Set icon size */
+    margin: 10px 0; /* Space between icons */
+    cursor: pointer; /* Indicate clickable icons */
+}
+/* Existing Sidebar CSS... */
+
+.sidebar-container {
+    display: flex; /* Flexbox for parallel layout */
+}
+
+.sidebar {
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Add the icon styles here */
+.icon-container {
+    display: flex;
+    flex-direction: column; /* Stack icons vertically */
+    width: 20%;
+    margin-left: 7px;
+    border-radius: 5px;
+    align-items: left; /* Center icons horizontally */
+    margin-top: 20px; /* Adjust spacing as needed */
+    background-color: #28313a;
+}
+
+.icon-container img {
+    width: 30px; /* Set icon size */
+    margin: 10px 0; /* Space between icons */
+    cursor: pointer; /* Indicate clickable icons */
+    background-color: #28313a;
+    align-items: left; /* Center icons horizontally */
+}
+
+/* Rest of your existing styles... */
+
+
+
+/* Dropdown Menu Styles */
+.dropdown {
+    margin: 10px 0;
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px;
+}
+
+.dropdown-title {
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px; /* Add padding for better click area */
+    color: #fff; /* White text */
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.2s; /* Smooth background transition */
+    background-color: #28313a; /* Match sidebar background */
+}
+
+.dropdown-options {
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid transparent; /* No border for seamless look */
+    margin-top: 5px; /* Space between title and options */
+}
+
+.dropdown-option {
+    display: flex;
+    justify-content: space-between; /* Space between text and dots */
+    padding: 8px 10px; /* Padding for each option */
+    background-color: #28313a; /* Match sidebar background */
+    color: #fff; /* White text */
+    cursor: pointer; /* Indicate clickable */
+}
+
+
+.three-dots {
+    font-size: 14px; /* Dot size */
+    color: #fff; /* Grey color for dots */
+    align-self: center; /* Center vertically */
+    background-color: #28313a; /* Match sidebar background */
+}
+.dropdown-title {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    cursor: pointer;
+    padding: 10px;
+    color: #fff; /* White text */
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.report-icon {
+    width: 20px; /* Adjust icon size */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.dropdown-arrow {
+    width: 15px; /* Adjust arrow size */
+    margin-left: auto; /* Push arrow to the right */
+    transition: transform 0.2s; /* Smooth rotation transition */
+}
+
+.dropdown-arrow {
+    transform: rotate(0deg); /* Initial rotation for down arrow */
+}
+
+.dropdown.open .dropdown-arrow {
+    transform: rotate(180deg); /* Rotate arrow for up state */
+}
+/* Existing Sidebar CSS... */
+
+.sidebar {
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dropdown {
+    margin: 10px 0;
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px;
+}
+
+.dropdown-title {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    cursor: pointer;
+    padding: 10px;
+    color: #fff; /* White text */
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-title:hover {
+    background-color: #2e3b45; /* Slightly lighter on hover */
+}
+
+.report-icon {
+    width: 20px; /* Adjust icon size */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.dropdown-arrow {
+    width: 15px; /* Adjust arrow size */
+    margin-left: auto; /* Push arrow to the right */
+    transition: transform 0.2s; /* Smooth rotation transition */
+}
+
+.dropdown-options {
+    background-color: #28313a; /* Match sidebar */
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid transparent; /* No border for seamless look */
+    margin-top: 5px; /* Space between title and options */
+}
+
+.dropdown-option {
+    display: flex;
+    justify-content: space-between; /* Space between text and dots */
+    padding: 8px 10px; /* Padding for each option */
+    background-color: #28313a; /* Match sidebar background */
+    color: #fff; /* White text */
+    cursor: pointer; /* Indicate clickable */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-option:hover {
+    background-color: #2e3b45; /* Highlight on hover */
+}
+
+.three-dots {
+    font-size: 14px; /* Dot size */
+    color: #888; /* Grey color for dots */
+    align-self: center; /* Center vertically */
+}
