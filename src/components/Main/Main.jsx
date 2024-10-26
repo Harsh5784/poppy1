@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Main.css';
-import axios from 'axios';
+import { assets } from '../../assets/assets';
 import upArrow from '../../assets/up_arrow.png';
+import axios from 'axios';
 
 export const Main = ({ summary }) => {
   const defaultUsername = 'Harsh';
@@ -9,6 +10,7 @@ export const Main = ({ summary }) => {
   const [loading, setLoading] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [actionType, setActionType] = useState('summary');
+  const [submittedMessages, setSubmittedMessages] = useState([]);
 
   useEffect(() => {
     // Automatically send data to API when summary changes
@@ -65,6 +67,41 @@ export const Main = ({ summary }) => {
     }
   };
 
+  const askQuestion = async (question) => {
+    const formData = new URLSearchParams();
+    formData.append('username', defaultUsername);
+    formData.append('question', question);
+
+    const parsedData = JSON.parse(summary);
+    const validLinks = extractLinks(parsedData);
+    validLinks.youtube.forEach((link, index) => {
+      formData.append(`youtube_link${index + 1}`, link);
+    });
+    validLinks.uploadedFiles.forEach((file, index) => {
+      formData.append(`uploaded_file${index + 1}`, file);
+    });
+    validLinks.website.forEach((link, index) => {
+      formData.append(`website_url${index + 1}`, link);
+    });
+    validLinks.wikipedia.forEach((title, index) => {
+      formData.append(`wikipedia_title${index + 1}`, title);
+    });
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://15.206.73.250:5000/api/ask_question', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      setApiSummary(response.data.answer);
+    } catch (error) {
+      console.error('Error asking question:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleActionChange = (e) => {
     setActionType(e.target.value);
   };
@@ -72,26 +109,60 @@ export const Main = ({ summary }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (actionType === 'qna' && inputMessage.trim()) {
-      // handle Q&A here
+      setSubmittedMessages([...submittedMessages, inputMessage]);
+      askQuestion(inputMessage);
+      setInputMessage('');
     }
   };
+
+  const renderCards = () => (
+    <div className="cards">
+      <div className="card">
+        <h3 className='yt'>YouTube Videos</h3>
+        <p>Prompt using a YouTube video link</p>
+      </div>
+      <div className="card">
+        <h3 className='image'>Image</h3>
+        <p>Prompt using a picture</p>
+      </div>
+      <div className="card">
+        <h3 className='audio'>Audio File</h3>
+        <p>Prompt using recorded audio files</p>
+      </div>
+      <div className="card">
+        <h3 className='website'>Website Link</h3>
+        <p>Prompt using a website link</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className='main'>
       <div className="nav">
-        <h1>My Application</h1>
-        <select value={actionType} onChange={handleActionChange} className="nav-dropdown">
+        <img src={assets.logo} alt="Logo" />
+        <select 
+          value={actionType} 
+          onChange={handleActionChange}
+          className="nav-dropdown"
+        >
           <option value="summary">Summary</option>
           <option value="qna">Q&A</option>
         </select>
+        <div className='nav-right'>
+          <img src={assets.home_icon} alt="Home" />
+          <img src={assets.calendar} alt="Calendar" />
+          <img src={assets.notification_bell} alt="Notifications" />
+          <img src={assets.chat_icon} alt="Chat" />
+          <img src={assets.tool_icon} alt="Tools" />
+          <img src={assets.user_icon} alt="User" />
+        </div>
       </div>
-
       <div className="main-container">
         <div className='box'>
           {loading ? (
             <div className="loading">Loading...</div>
           ) : (
-            apiSummary && (
+            apiSummary ? (
               <div className="summary-display">
                 <ul className="summary-list">
                   {apiSummary.split('\n').filter(Boolean).map((summary, index) => (
@@ -99,6 +170,37 @@ export const Main = ({ summary }) => {
                   ))}
                 </ul>
               </div>
+            ) : (
+              <>
+              <div className="greet">
+                <img className="logo" src={assets.logo} alt="Logo" />
+                <div className="greet-text">
+                  <p><span>Hello, {defaultUsername}</span></p>
+                  <p>How can I help you today?</p>
+                </div>
+              </div>
+
+              <p className='bottom-info'>Ask anything from multiple resources</p>
+
+              <div className="cards">
+                <div className="card">
+                  <h3 className='yt'>YouTube Videos</h3>
+                  <p>Prompt using a YouTube video link</p>
+                </div>
+                <div className="card">
+                  <h3 className='image'>Image</h3>
+                  <p>Prompt using a picture</p>
+                </div>
+                <div className="card">
+                  <h3 className='audio'>Audio File</h3>
+                  <p>Prompt using recorded audio files</p>
+                </div>
+                <div className="card">
+                  <h3 className='website'>Website Link</h3>
+                  <p>Prompt using a website link</p>
+                </div>
+              </div>
+            </>
             )
           )}
         </div>
@@ -118,6 +220,17 @@ export const Main = ({ summary }) => {
               </button>
             </div>
           </form>
+
+          {actionType === 'qna' && submittedMessages.length > 0 && (
+            <div className="submitted-messages">
+              <h3>Submitted Messages:</h3>
+              <ul>
+                {submittedMessages.map((msg, index) => (
+                  <li key={index}>{msg}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
