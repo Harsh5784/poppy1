@@ -3,13 +3,13 @@ import './Sidebar.css';
 import { assets } from '../../assets/assets';
 import Linkbar from './Links_bar/linkbar'; 
 import toggleIcon from '../../assets/right.png'; 
-import reportIcon from '../../assets/youtube_icon.png'; 
-import upArrowIcon from '../../assets/youtube_icon.png'; 
-import downArrowIcon from '../../assets/youtube_icon.png'; 
-import icon1 from '../../assets/youtube_icon.png'; 
-import icon2 from '../../assets/youtube_icon.png'; 
-import icon3 from '../../assets/youtube_icon.png'; 
-import icon4 from '../../assets/youtube_icon.png'; 
+import reportIcon from '../../assets/report-analytics.png'; 
+import upArrowIcon from '../../assets/chevron-up.png'; 
+import downArrowIcon from '../../assets/chevron-down.png'; 
+import icon1 from '../../assets/youtube.png'; 
+import icon2 from '../../assets/world.png'; 
+import icon3 from '../../assets/mic.png'; 
+import icon4 from '../../assets/file-description.png'; 
 
 export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
     const [isSidebarVisible, setIsSidebarVisibleState] = useState(true);

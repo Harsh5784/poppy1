@@ -13,9 +13,8 @@ export const Main = ({ summary }) => {
   const [submittedMessages, setSubmittedMessages] = useState([]);
 
   useEffect(() => {
-    // Automatically send data to API when summary changes
     if (summary && (summary.youtubeLinks?.length || summary.websiteLinks?.length)) {
-      sendDataToAPI(extractLinks(summary));
+      sendDataToAPI(extractLinks(summary), 'summary');
     }
   }, [summary]);
 
@@ -28,7 +27,13 @@ export const Main = ({ summary }) => {
     };
   };
 
-  const sendDataToAPI = async (validLinks) => {
+  const getApiEndpoint = () => {
+    return actionType === 'summary'
+      ? 'http://15.206.73.250:5000/api/summary'
+      : 'http://15.206.73.250:5000/api/ask_question';
+  };
+
+  const sendDataToAPI = async (validLinks, question = '') => {
     const formData = new URLSearchParams();
     formData.append('username', defaultUsername);
 
@@ -48,18 +53,26 @@ export const Main = ({ summary }) => {
       formData.append(`wikipedia_title${index + 1}`, title);
     });
 
-    if (!validLinks.youtube.length && !validLinks.website.length) {
-      return; // Do not send if no links are available
+    if (question) {
+      formData.append('question', question);
+    }
+
+    if (!validLinks.youtube.length && !validLinks.website.length && !question) {
+      return; // Do not send if no links or question is available
     }
 
     setLoading(true);
     try {
-      const response = await axios.post('http://15.206.73.250:5000/api/summary', formData, {
+      const response = await axios.post(getApiEndpoint(), formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      setApiSummary(response.data.summary);
+      if (actionType === 'summary') {
+        setApiSummary(response.data.summary);
+      } else {
+        setApiSummary(response.data.answer);
+      }
     } catch (error) {
       console.error('Error sending data to API:', error);
     } finally {
@@ -67,51 +80,23 @@ export const Main = ({ summary }) => {
     }
   };
 
-  const askQuestion = async (question) => {
-    const formData = new URLSearchParams();
-    formData.append('username', defaultUsername);
-    formData.append('question', question);
-
-    const parsedData = JSON.parse(summary);
-    const validLinks = extractLinks(parsedData);
-    validLinks.youtube.forEach((link, index) => {
-      formData.append(`youtube_link${index + 1}`, link);
-    });
-    validLinks.uploadedFiles.forEach((file, index) => {
-      formData.append(`uploaded_file${index + 1}`, file);
-    });
-    validLinks.website.forEach((link, index) => {
-      formData.append(`website_url${index + 1}`, link);
-    });
-    validLinks.wikipedia.forEach((title, index) => {
-      formData.append(`wikipedia_title${index + 1}`, title);
-    });
-
-    setLoading(true);
-    try {
-      const response = await axios.post('http://15.206.73.250:5000/api/ask_question', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-      setApiSummary(response.data.answer);
-    } catch (error) {
-      console.error('Error asking question:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleActionChange = (e) => {
     setActionType(e.target.value);
+    setApiSummary(''); // Clear summary when switching actions
+    setSubmittedMessages([]); // Clear submitted messages when switching actions
+    setInputMessage(''); // Clear input field when switching actions
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const validLinks = extractLinks(JSON.parse(summary)); // Extract links from summary
+
     if (actionType === 'qna' && inputMessage.trim()) {
       setSubmittedMessages([...submittedMessages, inputMessage]);
-      askQuestion(inputMessage);
-      setInputMessage('');
+      sendDataToAPI(validLinks, inputMessage); // Send input message to API
+      setInputMessage(''); // Clear input field after submission
+    } else if (actionType === 'summary') {
+      sendDataToAPI(validLinks); // Send data for summary if applicable
     }
   };
 
@@ -135,6 +120,24 @@ export const Main = ({ summary }) => {
       </div>
     </div>
   );
+
+  const formatSummary = (summaryText) => {
+    const formattedText = summaryText.split('\n').map((line, index) => {
+      if (line.startsWith('**') && line.endsWith('**')) {
+        return <h3 key={index} className="summary-heading">{line.replace(/\*\*/g, '')}</h3>;
+      } else if (line.startsWith('*')) {
+        return <li key={index} className="summary-item">{line.replace(/^\*/, '')}</li>;
+      } else {
+        return <p key={index} className="summary-paragraph">{line}</p>;
+      }
+    });
+
+    return (
+      <div className='Sto'>
+        {formattedText}
+      </div>
+    );
+  };
 
   return (
     <div className='main'>
@@ -164,43 +167,22 @@ export const Main = ({ summary }) => {
           ) : (
             apiSummary ? (
               <div className="summary-display">
-                <ul className="summary-list">
-                  {apiSummary.split('\n').filter(Boolean).map((summary, index) => (
-                    <li key={index} className="subtitle">{summary}</li>
-                  ))}
-                </ul>
+                {formatSummary(apiSummary)}
               </div>
             ) : (
               <>
-              <div className="greet">
-                <img className="logo" src={assets.logo} alt="Logo" />
-                <div className="greet-text">
-                  <p><span>Hello, {defaultUsername}</span></p>
-                  <p>How can I help you today?</p>
+                <div className="greet">
+                  <img className="logo" src={assets.logo} alt="Logo" />
+                  <div className="greet-text">
+                    <p><span>Hello, {defaultUsername}</span></p>
+                    <p>How can I help you today?</p>
+                  </div>
                 </div>
-              </div>
 
-              <p className='bottom-info'>Ask anything from multiple resources</p>
+                <p className='bottom-info'>Ask anything from multiple resources</p>
 
-              <div className="cards">
-                <div className="card">
-                  <h3 className='yt'>YouTube Videos</h3>
-                  <p>Prompt using a YouTube video link</p>
-                </div>
-                <div className="card">
-                  <h3 className='image'>Image</h3>
-                  <p>Prompt using a picture</p>
-                </div>
-                <div className="card">
-                  <h3 className='audio'>Audio File</h3>
-                  <p>Prompt using recorded audio files</p>
-                </div>
-                <div className="card">
-                  <h3 className='website'>Website Link</h3>
-                  <p>Prompt using a website link</p>
-                </div>
-              </div>
-            </>
+                {renderCards()}
+              </>
             )
           )}
         </div>

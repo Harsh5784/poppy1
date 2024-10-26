@@ -23,6 +23,12 @@
     max-width: 400px;
     margin-bottom: 20px;
 }
+.file-icon {
+    width: 80px; /* Set your desired width */
+    height: 20px; /* Set your desired height */
+    margin-left: -55px; /* Space between input and icon */
+}
+
 
 .input-container {
     display: flex;
@@ -140,4 +146,21 @@
 .summary-result {
     margin-top: 20px;
     text-align: left;
+}
+/* Specific styles for audio file upload */
+.audio-input-wrapper {
+    height: 30px; /* Increase height for the audio input wrapper */
+}
+
+.audio-file-icon {
+    width: 100px; /* Increase width of the file icon */
+    height: 60px; /* Increase height of the file icon */
+}
+
+/* Adjust the file preview size */
+.audio-file-preview {
+    width: 150px; /* Adjust width for audio file preview */
+    height: 30px; /* Adjust height for audio file preview */
+    margin-left: -5px;
+    background-color: #28313a;
 }

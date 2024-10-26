@@ -15,6 +15,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
+
+.summary-display{
+    color: #fff;
+    background-color: #1f2c34;
+}
 .main .nav {
     display: flex;
     align-items: center;
@@ -30,6 +35,59 @@
     justify-content: space-between;
     align-items: center;
 }
+/* Main styles for the API summary display */
+.summary-display {
+    color: #fff;
+    background-color: none; /* Ensure this matches the main theme */
+    padding: 20px;
+    border-radius: 10px;
+    width: 57vw;
+    margin-left: -20px;
+    overflow-y: auto; /* Allow scrolling if content is too long */
+    max-height: 450px; /* Limit height for better layout */
+}
+.summary-heading{
+    background-color: #1f2c34;
+}
+.sto{
+    gap: 10px;
+}
+
+.summary-item{
+    background-color: #1f2c34;
+}
+.summary-display{
+    background-color: #1f2c34;
+}
+
+/* Custom scrollbar styles */
+.summary-display::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+    background-color: #1f2c34;
+
+}
+
+.summary-display::-webkit-scrollbar-track {
+    background: transparent; /* Background color of the scrollbar track */
+}
+
+.summary-display::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3); /* Light thumb color for visibility */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.summary-display::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5); /* Slightly darker when hovering */
+}
+
+/* Ensure the entire main container matches the theme */
+.main {
+    flex: 1;
+    min-height: 100vh;
+    padding-bottom: 15vh;
+    position: relative;
+}
+
 
 .main .nav img {
     width: 40px;

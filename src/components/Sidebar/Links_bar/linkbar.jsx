@@ -4,6 +4,8 @@ import youtubeIcon from '../../../assets/youtube_links.jpg';
 import websiteIcon from '../../../assets/website.jpg';
 import audioIcon from '../../../assets/audio.jpg';
 import fileIcon from '../../../assets/document.jpg';
+import chooseIcon from '../../../assets/choose.png'; // Import the placeholder image for audio and document
+import audio from '../../../assets/audio.png'; // Import the new audio image
 
 const SimplePage = ({ setSummary }) => {
   const [youtubeLinks, setYoutubeLinks] = useState(['']);
@@ -165,26 +167,29 @@ const SimplePage = ({ setSummary }) => {
           </div>
         ))}
 
-        {/* Audio Files */}
-        {audioFiles.map((file, index) => (
-          <div className="input-container" key={index}>
-            <div className="vertical-line" style={{ left: `${index * 20}px` }} />
-            {!index && <img src={audioIcon} alt="Audio" className="input-icon" />}
-            <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
-              <input
-                type="file"
-                accept="audio/*"
-                onChange={(e) => handleFileChange('audio', index, e.target.files[0])}
-              />
-              {index > 0 && (
-                <span className="remove-button" onClick={() => removeInputField('audio', index)}>X</span>
-              )}
-              {index === audioFiles.length - 1 && (
-                <span className="add-button" onClick={() => addInputField('audio')}>+</span>
-              )}
-            </div>
-          </div>
-        ))}
+{/* Audio Files */}
+{audioFiles.map((file, index) => (
+  <div className="input-container" key={index}>
+    <div className="vertical-line" style={{ left: `${index * 20}px` }} />
+    {!index && <img src={audioIcon} alt="Audio" className="input-icon" />}
+    <div className={`input-wrapper audio-input-wrapper`} style={{ marginLeft: `${index * 15}px` }}>
+      <label className="custom-file-upload">
+        <input
+          type="file"
+          accept="audio/*"
+          onChange={(e) => handleFileChange('audio', index, e.target.files[0])}
+        />
+        <img src={file ? URL.createObjectURL(file) : audio} alt="Upload Audio" className={`file-icon audio-file-preview`} />
+      </label>
+      {index > 0 && (
+        <span className="remove-button" onClick={() => removeInputField('audio', index)}>X</span>
+      )}
+      {index === audioFiles.length - 1 && (
+        <span className="add-button" onClick={() => addInputField('audio')}>+</span>
+      )}
+    </div>
+  </div>
+))}
 
         {/* Document Files */}
         {documentFiles.map((file, index) => (
@@ -192,11 +197,14 @@ const SimplePage = ({ setSummary }) => {
             <div className="vertical-line" style={{ left: `${index * 20}px` }} />
             {!index && <img src={fileIcon} alt="Document" className="input-icon" />}
             <div className="input-wrapper" style={{ marginLeft: `${index * 15}px` }}>
-              <input
-                type="file"
-                accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*"
-                onChange={(e) => handleFileChange('document', index, e.target.files[0])}
-              />
+              <label className="custom-file-upload">
+                <input
+                  type="file"
+                  accept="application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/*"
+                  onChange={(e) => handleFileChange('document', index, e.target.files[0])}
+                />
+                <img src={file ? URL.createObjectURL(file) : chooseIcon} alt="Upload Document" className="file-icon" />
+              </label>
               {index > 0 && (
                 <span className="remove-button" onClick={() => removeInputField('document', index)}>X</span>
               )}
