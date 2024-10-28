@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import upArrow from '../../assets/up_arrow.png';
@@ -11,12 +11,7 @@ export const Main = ({ summary }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [actionType, setActionType] = useState('summary');
   const [submittedMessages, setSubmittedMessages] = useState([]);
-
-  useEffect(() => {
-    if (summary && (summary.youtubeLinks?.length || summary.websiteLinks?.length)) {
-      sendDataToAPI(extractLinks(summary), 'summary');
-    }
-  }, [summary]);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const extractLinks = (data) => {
     return {
@@ -85,12 +80,18 @@ export const Main = ({ summary }) => {
     setApiSummary(''); // Clear summary when switching actions
     setSubmittedMessages([]); // Clear submitted messages when switching actions
     setInputMessage(''); // Clear input field when switching actions
+    setIsButtonClicked(false); // Reset button click state
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const validLinks = extractLinks(JSON.parse(summary)); // Extract links from summary
-
+    setIsButtonClicked(true); // Set button clicked state to true
+  
+    // Check if summary is a string and parse it if needed
+    const parsedSummary = typeof summary === 'string' ? JSON.parse(summary) : summary;
+    
+    const validLinks = extractLinks(parsedSummary); // Extract links from summary
+  
     if (actionType === 'qna' && inputMessage.trim()) {
       setSubmittedMessages([...submittedMessages, inputMessage]);
       sendDataToAPI(validLinks, inputMessage); // Send input message to API
@@ -99,6 +100,7 @@ export const Main = ({ summary }) => {
       sendDataToAPI(validLinks); // Send data for summary if applicable
     }
   };
+  
 
   const renderCards = () => (
     <div className="cards">
@@ -122,7 +124,7 @@ export const Main = ({ summary }) => {
   );
 
   const formatSummary = (summaryText) => {
-    const formattedText = summaryText.split('\n').map((line, index) => {
+    return summaryText.split('\n').map((line, index) => {
       if (line.startsWith('**') && line.endsWith('**')) {
         return <h3 key={index} className="summary-heading">{line.replace(/\*\*/g, '')}</h3>;
       } else if (line.startsWith('*')) {
@@ -131,12 +133,6 @@ export const Main = ({ summary }) => {
         return <p key={index} className="summary-paragraph">{line}</p>;
       }
     });
-
-    return (
-      <div className='Sto'>
-        {formattedText}
-      </div>
-    );
   };
 
   return (
@@ -194,10 +190,10 @@ export const Main = ({ summary }) => {
                 type="text" 
                 placeholder={actionType === 'summary' ? 'Switch to Q&A to ask a question' : 'Message (optional)'} 
                 value={inputMessage}
-                onChange={(e) => actionType === 'qna' && setInputMessage(e.target.value)}
                 disabled={actionType === 'summary'}
+                onChange={(e) => setInputMessage(e.target.value)} // Allow typing regardless of action type
               />
-              <button type="submit" className="submit-button" disabled={actionType === 'summary'}>
+              <button type="submit" className="submit-button">
                 <img src={upArrow} alt="Send" />
               </button>
             </div>
