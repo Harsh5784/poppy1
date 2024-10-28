@@ -392,3 +392,170 @@
     color: #888; /* Grey color for dots */
     align-self: center; /* Center vertically */
 }
+.menu {
+    display: flex;
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    width: 50px; /* Set fixed width */
+    height: 50px; /* Set fixed height */
+    margin-top: 15px;
+    cursor: pointer; /* Indicate clickable */
+    background-color: #28313a; /* Match existing button styles */
+    border-radius: 50%; /* Optional: make it circular */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.menu:hover {
+    background-color: #2e3b45; /* Highlight on hover */
+    
+}
+
+.menu img {
+    background-color: #28313a; /* Match existing button styles */
+    width: 30px; /* Set icon size */
+    height: auto; /* Maintain aspect ratio */
+}
+.sidebar-container {
+    display: flex; /* Flexbox for parallel layout */
+}
+
+.sidebar {
+    margin: 10px;
+    border-radius: 8px;
+    min-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #35404b;
+    padding: 25px 15px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.top {
+    background-color: #2e3b45; /* Highlight on hover */
+    background-color: #28313a; /* Match existing button styles */
+    display: flex; /* Use Flexbox */
+    justify-content: space-between; /* Space between the items */
+    align-items: center; /* Center items vertically */
+}
+
+.toggle-container {
+    background-color: transparent; /* No background for toggle buttons */
+    display: flex; /* Use Flexbox for alignment */
+    justify-content: space-between; /* Space between the icons */
+    align-items: center; /* Center icons vertically */
+    width: 100%; /* Make it full width */
+}
+
+.menu, .toggle-linkbar {
+    display: flex;
+    
+    background-color: #2e3b45; /* Highlight on hover */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    width: 50px; /* Set fixed width for consistency */
+    height: 50px; /* Set fixed height for consistency */
+    cursor: pointer; /* Indicate clickable */
+    background-color: transparent; /* No background for toggle buttons */
+    border-radius: 50%; /* Optional: make it circular */
+}
+
+.menu img, .toggle-linkbar img {
+    background-color: transparent; /* No background for toggle buttons */
+    width: 30px; /* Set icon size */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.menu:hover, .toggle-linkbar:hover {
+    background-color: #2e3b45; /* Highlight on hover */
+}
+
+.toggle-linkbar{
+    margin-top: 20px;
+}
+.new-chat {
+    margin-top: 35px;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 10px;
+    background-color: #28313a;
+    border-radius: 50px;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.recent {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 40px;
+    border-bottom: 3px outset #a7b0ba;
+}
+
+.recent-title {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.recent-entry {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-item {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.dropdown {
+    margin: 10px 0;
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px;
+}
+
+.dropdown-title {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    cursor: pointer;
+    padding: 10px;
+    color: #fff; /* White text */
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-options {
+    background-color: #28313a; /* Match sidebar background */
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px; /* Space between title and options */
+}
+
+.dropdown-option {
+    display: flex;
+    justify-content: space-between; /* Space between text and dots */
+    padding: 8px 10px; /* Padding for each option */
+    background-color: #28313a; /* Match sidebar background */
+    color: #fff; /* White text */
+    cursor: pointer; /* Indicate clickable */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-option:hover {
+    background-color: #2e3b45; /* Highlight on hover */
+}

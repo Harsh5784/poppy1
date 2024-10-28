@@ -17,7 +17,7 @@ export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleCollapse = () => {
-        setIsSidebarVisibleState(false);
+        setIsSidebarVisibleState(prev => !prev);
     };
 
     const toggleLinkbarVisibility = () => {
@@ -30,19 +30,21 @@ export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
 
     return (
         <div className='sidebar-container'>
-            {isSidebarVisible && (
+            {isSidebarVisible ? (
                 <div className='sidebar'>
                     <div className='top'>
-                        <span onClick={handleCollapse} className='menu'>
-                            <img src={assets.sidebar} alt="Sidebar Icon" />
-                        </span>
-                        <span className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
-                            <img 
-                                src={toggleIcon} 
-                                alt="Toggle Linkbar" 
-                                className="toggle-linkbar-icon"
-                            />
-                        </span>
+                        <div className="toggle-container">
+                            <span onClick={handleCollapse} className='menu'>
+                                <img src={assets.sidebar} alt="Sidebar Icon" />
+                            </span>
+                            <span className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
+                                <img 
+                                    src={toggleIcon} 
+                                    alt="Toggle Linkbar" 
+                                    className="toggle-linkbar-icon"
+                                />
+                            </span>
+                        </div>
                     </div>
 
                     <div className="new-chat">
@@ -101,6 +103,21 @@ export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
                             <img src={assets.setting_icon} alt="Settings Icon" />
                             <p>Settings</p>
                         </div>
+                    </div>
+                </div>
+            ) : (
+                <div className='collapsed-sidebar'>
+                    <div className="toggle-container">
+                        <span onClick={handleCollapse} className='menu'>
+                            <img src={assets.sidebar} alt="Sidebar Icon" />
+                        </span>
+                        <span className="toggle-linkbar" onClick={toggleLinkbarVisibility}>
+                            <img 
+                                src={toggleIcon} 
+                                alt="Toggle Linkbar" 
+                                className="toggle-linkbar-icon"
+                            />
+                        </span>
                     </div>
                 </div>
             )}
