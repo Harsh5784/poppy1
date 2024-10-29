@@ -100,7 +100,6 @@ export const Main = ({ summary }) => {
       sendDataToAPI(validLinks); // Send data for summary if applicable
     }
   };
-  
 
   const renderCards = () => (
     <div className="cards">
@@ -125,13 +124,29 @@ export const Main = ({ summary }) => {
 
   const formatSummary = (summaryText) => {
     return summaryText.split('\n').map((line, index) => {
+      line = line.trim();
+
+      // Check for main headings (which start and end with **)
       if (line.startsWith('**') && line.endsWith('**')) {
-        return <h3 key={index} className="summary-heading">{line.replace(/\*\*/g, '')}</h3>;
-      } else if (line.startsWith('*')) {
-        return <li key={index} className="summary-item">{line.replace(/^\*/, '')}</li>;
-      } else {
+        return <h3 key={index} className="summary-heading">{line.replace(/\*\*/g, '').trim()}</h3>;
+      }
+      
+      // Check for subheadings (which start with a single asterisk)
+      else if (line.startsWith('*') && !line.startsWith('**')) {
+        return (
+          <div key={index} className="summary-subheading" style={{ marginLeft: '20px', fontWeight: 'bold' }}>
+            {line.replace(/^\*/, '').trim()}
+          </div>
+        );
+      }
+
+      // Check for regular paragraphs that aren't empty
+      else if (line) {
         return <p key={index} className="summary-paragraph">{line}</p>;
       }
+
+      // Skip empty lines
+      return null;
     });
   };
 
@@ -156,6 +171,7 @@ export const Main = ({ summary }) => {
           <img src={assets.user_icon} alt="User" />
         </div>
       </div>
+
       <div className="main-container">
         <div className='box'>
           {loading ? (
