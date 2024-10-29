@@ -63,11 +63,7 @@ export const Main = ({ summary }) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      if (actionType === 'summary') {
-        setApiSummary(response.data.summary);
-      } else {
-        setApiSummary(response.data.answer);
-      }
+      setApiSummary(actionType === 'summary' ? response.data.summary : response.data.answer);
     } catch (error) {
       console.error('Error sending data to API:', error);
     } finally {
@@ -89,7 +85,6 @@ export const Main = ({ summary }) => {
   
     // Check if summary is a string and parse it if needed
     const parsedSummary = typeof summary === 'string' ? JSON.parse(summary) : summary;
-    
     const validLinks = extractLinks(parsedSummary); // Extract links from summary
   
     if (actionType === 'qna' && inputMessage.trim()) {
@@ -100,7 +95,7 @@ export const Main = ({ summary }) => {
       sendDataToAPI(validLinks); // Send data for summary if applicable
     }
   };
-
+  
   const renderCards = () => (
     <div className="cards">
       <div className="card">
@@ -126,7 +121,7 @@ export const Main = ({ summary }) => {
     return summaryText.split('\n').map((line, index) => {
       line = line.trim();
 
-      // Check for main headings (which start and end with **)
+      // Check for main headings
       if (line.startsWith('**') && line.endsWith('**')) {
         return <h3 key={index} className="summary-heading">{line.replace(/\*\*/g, '').trim()}</h3>;
       }
@@ -171,7 +166,6 @@ export const Main = ({ summary }) => {
           <img src={assets.user_icon} alt="User" />
         </div>
       </div>
-
       <div className="main-container">
         <div className='box'>
           {loading ? (
