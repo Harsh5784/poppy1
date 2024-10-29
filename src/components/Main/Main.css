@@ -313,3 +313,22 @@
 .summary-subheading{
     background-color: transparent;
 }
+
+
+.loader {
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-top: 8px solid #fff; /* Adjust the color as needed */
+    border-radius: 50%;
+    background-color: transparent;
+    width: 40px; /* Size of the loader */
+    height: 40px; /* Size of the loader */
+    animation: spin 1s linear infinite;
+    margin: auto; /* Center the loader */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Other existing styles in Main.css */

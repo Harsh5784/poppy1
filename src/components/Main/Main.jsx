@@ -167,10 +167,10 @@ export const Main = ({ summary }) => {
         </div>
       </div>
       <div className="main-container">
-        <div className='box'>
+      <div className='box'>
           {loading ? (
-            <div className="loading">Loading...</div>
-          ) : (
+            <div className="loader"></div> // Circular loader
+          )  : (
             apiSummary ? (
               <div className="summary-display">
                 {formatSummary(apiSummary)}
