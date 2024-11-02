@@ -559,3 +559,24 @@
 .dropdown-option:hover {
     background-color: #2e3b45; /* Highlight on hover */
 }
+.download-icon {
+    width: 20px; /* Set the desired width */
+    height: 20px; /* Set the desired height */
+    margin-right: 10px; /* Space between icon and text */
+    background-color: transparent;
+    vertical-align: middle; /* Align icon with text */
+}
+
+.dropdown-option {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    padding: 8px 10px; /* Padding for each option */
+    background-color: #28313a; /* Match sidebar background */
+    color: #fff; /* White text */
+    cursor: pointer; /* Indicate clickable */
+    transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-option:hover {
+    background-color: #2e3b45; /* Highlight on hover */
+}

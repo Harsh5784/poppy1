@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './Sidebar.css';
 import { assets } from '../../assets/assets';
 import Linkbar from './Links_bar/linkbar'; 
@@ -10,23 +10,56 @@ import icon1 from '../../assets/youtube.png';
 import icon2 from '../../assets/world.png'; 
 import icon3 from '../../assets/mic.png'; 
 import icon4 from '../../assets/file-description.png'; 
+import downloadIcon from '../../assets/download.png'; // Import the download icon
 
 export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
     const [isSidebarVisible, setIsSidebarVisibleState] = useState(true);
     const [isLinkbarVisible, setIsLinkbarVisible] = useState(true);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [reports, setReports] = useState([]);
+    const username = "Devam"; // Hardcoded username
 
-    const handleCollapse = () => {
+    const handleCollapse = useCallback(() => {
         setIsSidebarVisibleState(prev => !prev);
-    };
+    }, []);
 
-    const toggleLinkbarVisibility = () => {
+    const toggleLinkbarVisibility = useCallback(() => {
         setIsLinkbarVisible(prev => !prev);
-    };
+    }, []);
 
-    const toggleDropdown = () => {
+    const toggleDropdown = useCallback(() => {
         setIsDropdownOpen(prev => !prev);
-    };
+    }, []);
+
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const response = await fetch('http://15.206.73.250:5000/api/list_reports', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }), // Sending the username in the required format
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    console.error('Error fetching reports:', response.status, errorMessage);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const sortedReports = (data.reports || []).sort((a, b) => {
+                    return new Date(b.timestamp) - new Date(a.timestamp); // Sort by timestamp descending
+                });
+                setReports(sortedReports);
+            } catch (error) {
+                console.error('Error fetching reports:', error);
+            }
+        };
+
+        fetchReports();
+    }, [username]);
 
     return (
         <div className='sidebar-container'>
@@ -80,9 +113,16 @@ export const Sidebar = ({ setIsSidebarVisible, setSummary }) => {
                         </div>
                         {isDropdownOpen && (
                             <div className="dropdown-options">
-                                <div className="dropdown-option">Option 1 <span className="three-dots">...</span></div>
-                                <div className="dropdown-option">Option 2 <span className="three-dots">...</span></div>
-                                <div className="dropdown-option">Option 3 <span className="three-dots">...</span></div>
+                                {reports.slice(0, 3).map((report, index) => ( // Limit to first 3 reports
+                                    <div key={index} className="dropdown-option">
+                                        <img src={downloadIcon} alt="Download Icon" className="download-icon" /> {/* Download icon */}
+                                        {report.video_title ? report.video_title : "No title available"} {/* Show title or "No title available" */}
+                                        <span className="three-dots">...</span>
+                                    </div>
+                                ))}
+                                {reports.length === 0 && (
+                                    <div className="dropdown-option">No reports available.</div>
+                                )}
                             </div>
                         )}
                     </div>

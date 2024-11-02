@@ -5,13 +5,14 @@ import upArrow from '../../assets/up_arrow.png';
 import axios from 'axios';
 
 export const Main = ({ summary }) => {
-  const defaultUsername = 'Harsh';
+  const defaultUsername = 'Devam';
   const [apiSummary, setApiSummary] = useState('');
   const [loading, setLoading] = useState(false);
   const [inputMessage, setInputMessage] = useState('');
   const [actionType, setActionType] = useState('summary');
   const [submittedMessages, setSubmittedMessages] = useState([]);
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
+  const [apiHitMessage, setApiHitMessage] = useState(''); // State for API hit message
 
   const extractLinks = (data) => {
     return {
@@ -57,6 +58,7 @@ export const Main = ({ summary }) => {
     }
 
     setLoading(true);
+    setApiHitMessage('Sending data to Q&A API...'); // Set API hit message
     try {
       const response = await axios.post(getApiEndpoint(), formData, {
         headers: {
@@ -64,10 +66,32 @@ export const Main = ({ summary }) => {
         },
       });
       setApiSummary(actionType === 'summary' ? response.data.summary : response.data.answer);
+      setApiHitMessage('Data sent successfully!'); // Set success message
+      setTimeout(() => setApiHitMessage(''), 3000); // Clear message after 3 seconds
     } catch (error) {
       console.error('Error sending data to API:', error);
+      setApiHitMessage('Error sending data to API.'); // Set error message
+      setTimeout(() => setApiHitMessage(''), 3000); // Clear message after 3 seconds
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveQnaReport = async () => {
+    const formData = new URLSearchParams();
+    formData.append('username', defaultUsername);
+
+    try {
+      const response = await axios.post('http://15.206.73.250:5000/api/save_qna', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      console.log('QnA report saved successfully:', response.data);
+      setSuccessMessage(response.data.message); // Set success message for report saving
+      setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
+    } catch (error) {
+      console.error('Error saving QnA report:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -76,23 +100,24 @@ export const Main = ({ summary }) => {
     setApiSummary(''); // Clear summary when switching actions
     setSubmittedMessages([]); // Clear submitted messages when switching actions
     setInputMessage(''); // Clear input field when switching actions
-    setIsButtonClicked(false); // Reset button click state
+    setSuccessMessage(''); // Clear success message when switching actions
+    setApiHitMessage(''); // Clear API hit message when switching actions
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsButtonClicked(true); // Set button clicked state to true
-  
+
     // Check if summary is a string and parse it if needed
     const parsedSummary = typeof summary === 'string' ? JSON.parse(summary) : summary;
     const validLinks = extractLinks(parsedSummary); // Extract links from summary
   
     if (actionType === 'qna' && inputMessage.trim()) {
       setSubmittedMessages([...submittedMessages, inputMessage]);
-      sendDataToAPI(validLinks, inputMessage); // Send input message to API
+      await sendDataToAPI(validLinks, inputMessage); // Send input message to API
+      await saveQnaReport(); // Save QnA report after submitting
       setInputMessage(''); // Clear input field after submission
     } else if (actionType === 'summary') {
-      sendDataToAPI(validLinks); // Send data for summary if applicable
+      await sendDataToAPI(validLinks); // Send data for summary if applicable
     }
   };
   
@@ -167,10 +192,10 @@ export const Main = ({ summary }) => {
         </div>
       </div>
       <div className="main-container">
-      <div className='box'>
+        <div className='box'>
           {loading ? (
             <div className="loader"></div> // Circular loader
-          )  : (
+          ) : (
             apiSummary ? (
               <div className="summary-display">
                 {formatSummary(apiSummary)}
@@ -208,6 +233,10 @@ export const Main = ({ summary }) => {
               </button>
             </div>
           </form>
+
+          {apiHitMessage && <div className="api-hit-message">{apiHitMessage}</div>} {/* Display API hit message */}
+          
+          {successMessage && <div className="success-message">{successMessage}</div>} {/* Display success message */}
 
           {actionType === 'qna' && submittedMessages.length > 0 && (
             <div className="submitted-messages">

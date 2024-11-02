@@ -323,7 +323,10 @@
     width: 40px; /* Size of the loader */
     height: 40px; /* Size of the loader */
     animation: spin 1s linear infinite;
-    margin: auto; /* Center the loader */
+    position: absolute; /* Use absolute positioning */
+    top: 30%; /* Position from the top */
+    left: 48%; /* Position from the left */
+    transform: translate(-50%, -50%); /* Center it */
 }
 
 @keyframes spin {
